@@ -1,2 +1,2 @@
 # valtech-coin
-Used to learn about crypto currencies.
+Used to learn about crypto currencies with Python.
