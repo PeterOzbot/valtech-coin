@@ -14,6 +14,7 @@ def generate_md125_collisions() -> (str, str):
     firstPreimage = "nakamotoPeter"
     secondPreimage = "nakamoto"
     #secondPreimage = "nakamoto492T1eA8NX"
+    #secondPreimage = "nakamotoPL2Ja6uben"
     counter = 0
 
     while not isCollision:
