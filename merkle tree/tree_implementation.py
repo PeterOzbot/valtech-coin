@@ -61,7 +61,12 @@ def merkleize(sentence: str) -> str:
 
 #print(merkleize("I love chicken! But I dont like pees."))
 #d9e642064279e23d14443f446d071a5aa0f40257641d38d46b48a3111601c46b
+
 #print(merkleize("Unbelievable..."))
 #49527622a02f579bd6eb9b4bfadc2883cc22bfc5d9d05be936deb519eaa90b87
-print(merkleize("In our village, folks say God crumbles up the old moon into stars."))
+
+#print(merkleize("In our village, folks say God crumbles up the old moon into stars."))
 #dddf9c7317f31d40714814749dac3a0c5ebab164262d49b576ed35f95850797a
+
+print(merkleize("Hi there silly boy."))
+#9a1706f7ce1acd8f536cfa70113812e7828ffda02f6da8ab3e724a0ad3e8b1f8
