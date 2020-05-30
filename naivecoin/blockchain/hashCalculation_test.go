@@ -25,10 +25,10 @@ func Test_CorrectHash(t *testing.T) {
 
 	// create example block
 	var block *Block = &Block{
-		index:        15,
-		data:         "Dober dan gospod kamplan.",
-		previousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
-		timestamp:    time.Unix(1588430083866862500, 0),
+		Index:        15,
+		Data:         "Dober dan gospod kamplan.",
+		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
+		Timestamp:    time.Unix(1588430083866862500, 0),
 	}
 
 	//  is manually generated hash from block

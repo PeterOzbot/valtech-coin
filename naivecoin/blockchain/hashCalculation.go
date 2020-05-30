@@ -13,8 +13,11 @@ func (block *Block) CalculateHash() string {
 		return ""
 	}
 
+	// convert timestamp to string
+	var timestamp = strconv.FormatInt(block.Timestamp.Unix(), 10)
+
 	// create string value from block properties
-	blockStringRepresentation := strings.Join([]string{strconv.Itoa(block.index), block.previousHash, strconv.FormatInt(block.timestamp.Unix(), 10), block.data}, "")
+	blockStringRepresentation := strings.Join([]string{strconv.Itoa(block.Index), block.PreviousHash, timestamp, block.Data}, "")
 
 	// create hasher and write the bytes to it
 	hasher := sha256.New()

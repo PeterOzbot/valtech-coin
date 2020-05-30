@@ -13,7 +13,7 @@ func Test_GenesisBlock(t *testing.T) {
 	result := genesisBlock.CalculateHash()
 
 	// result should be correct hash
-	if result != genesisBlock.hash {
-		t.Errorf("hashing result is incorrect, Actual: %s Expected: %s", result, genesisBlock.hash)
+	if result != genesisBlock.Hash {
+		t.Errorf("hashing result is incorrect, Actual: %s Expected: %s", result, genesisBlock.Hash)
 	}
 }
