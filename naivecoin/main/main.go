@@ -1,7 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"naivecoin/blockchain"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("Hi, Naivecoin!")
+
+	router := gin.Default()
+	router.GET("/blocks", getBlockChain)
+
+	router.Run()
+}
+
+func getBlockChain(c *gin.Context) {
+	genesisBlock := blockchain.GenesisBlock()
+	c.JSON(200, genesisBlock)
 }

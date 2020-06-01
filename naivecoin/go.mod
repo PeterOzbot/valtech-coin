@@ -3,7 +3,6 @@ module naivecoin
 go 1.14
 
 require (
+	github.com/gin-gonic/gin v1.6.3
 	github.com/google/go-cmp v0.4.0
-	github.com/pkg/errors v0.9.1 // indirect
-	gotest.tools v2.2.0+incompatible
 )
