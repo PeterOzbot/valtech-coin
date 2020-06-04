@@ -1,7 +1,7 @@
 package blockchain
 
 //BlockChain : Current block chain.
-var BlockChain []*Block
+var currentBlockChain []*Block
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
 func SelectChain(newChain []*Block, existingChain []*Block) []*Block {
@@ -17,4 +17,13 @@ func SelectChain(newChain []*Block, existingChain []*Block) []*Block {
 	}
 
 	return existingChain
+}
+
+// GetBlockChain : Returns current valid block chain.
+func GetBlockChain() []*Block {
+	if currentBlockChain == nil {
+		currentBlockChain = append(currentBlockChain, GenesisBlock())
+	}
+
+	return currentBlockChain
 }
