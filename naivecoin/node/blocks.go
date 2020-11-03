@@ -2,13 +2,14 @@ package node
 
 import (
 	"naivecoin/blockchain"
+	"naivecoin/p2p"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-//GetBlockChain : Loads current block chain and serializes it to the context which should be returned to the client.
+//GetBlockChain : Loads current block chain and serializes it to the context which is returned to the client.
 func GetBlockChain(c *gin.Context) {
 	currentBlockChain := blockchain.GetBlockChain()
 	c.JSON(200, currentBlockChain)
@@ -34,6 +35,9 @@ func Mineblocks(c *gin.Context) {
 
 	// create new block
 	var newBlock = blockchain.GenerateBlock(blockData.Data, latestBlock, time.Now().Unix())
+
+	// notify peers
+	p2p.NotifyPeers(newBlock, c)
 
 	// respond with new block
 	c.JSON(http.StatusOK, newBlock)

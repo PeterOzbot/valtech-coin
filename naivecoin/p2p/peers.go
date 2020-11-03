@@ -1,34 +1,101 @@
 package p2p
 
 import (
+	"encoding/json"
+	"fmt"
+	"naivecoin/blockchain"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-var peers []*Peer
+var peers []*SocketInfo
 
 //GetPeers : Returns all connected peers.
 func GetPeers(c *gin.Context) {
-	c.JSON(200, peers)
+	var friendlyPeers []*PeerData
+	for _, peer := range peers {
+		friendlyPeers = append(friendlyPeers, &PeerData{
+			Address: peer.Connection.RemoteAddr().String(),
+		})
+	}
+	c.JSON(http.StatusOK, friendlyPeers)
 }
 
-//AddPeers : Adds peer to the list of all peers.
-func AddPeers(c *gin.Context) {
+//AddPeer : Adds peer to the list of all peers.
+func AddPeer(c *gin.Context) {
 
 	// deserialize peer from body
-	var peer *Peer = &Peer{}
-	if err := c.BindJSON(peer); err != nil {
+	var peerData *PeerData = &PeerData{}
+	if err := c.BindJSON(peerData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// validate
-	if peer == nil {
+	if peerData == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Deserialization failed."})
 		return
 	}
 
-	// add to list
-	peers = append(peers, peer)
+	// initialize peer and check if peer exists id
+	peer, alreadyConnected := TryInitializeCallerPeer(peerData)
+
+	//  add if peer does not already exists
+	if !alreadyConnected {
+
+		if peer != nil {
+			// add to list
+			peers = append(peers, peer)
+			c.JSON(http.StatusOK, "Peer added.")
+		} else {
+			c.JSON(http.StatusInternalServerError, "Peer initialization failed.")
+		}
+	} else {
+		c.JSON(http.StatusOK, "Peer is already added.")
+	}
+}
+
+//AddServerPeer : Adds to peer list but handles the 'Server' side of connection, That is when other node dials for connection.
+func AddServerPeer(c *gin.Context) {
+	// get caller id
+	callerID := c.Request.Header.Get(IdentifierHeader)
+
+	// initialize and check if peer does is already connected
+	peer, alreadyConnected := InitializeServerPeer(c, callerID)
+
+	//  add if peer does not already exists
+	if !alreadyConnected {
+		if peer != nil {
+			// add to list
+			peers = append(peers, peer)
+			fmt.Println("Server added.")
+		} else {
+			fmt.Println("Server initialization failed.")
+		}
+	} else {
+		fmt.Println("Server is already added.")
+	}
+}
+
+//doesPeerExists : return if peer is already connected
+func doesPeerExists(id string) bool {
+	for _, peer := range peers {
+		if peer.ID == id {
+			return true
+		}
+	}
+
+	return false
+}
+
+//NotifyPeers : Notifies all peers about new block.
+func NotifyPeers(bloc *blockchain.Block, c *gin.Context) {
+	b, err := json.Marshal(bloc)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Serialization failed." + err.Error()})
+	}
+	for _, peer := range peers {
+		peer.SendMessage(string(b))
+	}
 }

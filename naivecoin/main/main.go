@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"naivecoin/node"
 	"naivecoin/p2p"
 
@@ -9,33 +10,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var httpPort = flag.String("port", ":8080", "Port on which the http node runs.")
-var p2pPort = flag.String("port", ":9090", "Port on which the p2p node runs.")
+var port = flag.String("port", "8080", "Port on which the http node runs.")
 
 func main() {
 
 	// read flags
 	flag.Parse()
 
-	// initialize servers
-	initHTTP()
-	initP2P()
-}
-
-func initHTTP() {
 	// initialize routing
 	router := gin.Default()
+
+	// initialize http and p2p
+	initHTTP(router)
+	initP2P(router)
+
+	// run
+	router.Run(fmt.Sprintf(":%s", *port))
+}
+
+func initHTTP(router *gin.Engine) {
 
 	// set the routs
 	router.GET("/blocks", node.GetBlockChain)
 	router.POST("/mineblock", node.Mineblocks)
 	router.GET("/peers", p2p.GetPeers)
-	router.POST("/addPeer", p2p.AddPeers)
-
-	router.Run(*httpPort)
+	router.POST("/addPeer", p2p.AddPeer)
 }
 
-func initP2P() {
-
-	//p2pPort
+func initP2P(router *gin.Engine) {
+	router.GET("/ws", p2p.AddServerPeer)
 }
