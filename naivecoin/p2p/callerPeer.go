@@ -49,8 +49,8 @@ func TryInitializeCallerPeer(peerData *PeerData) (*SocketInfo, bool) {
 	}
 
 	// hook on message received
-	socketInfo.OnMessageReceived = func(message string) {
-		fmt.Println(message)
+	socketInfo.OnMessageReceived = func(requestMessage string) {
+		OnMessageReceived(requestMessage, socketInfo)
 	}
 
 	go func() {
@@ -61,7 +61,7 @@ func TryInitializeCallerPeer(peerData *PeerData) (*SocketInfo, bool) {
 				break
 			}
 			if socketInfo.OnMessageReceived != nil {
-				socketInfo.OnMessageReceived("FROM PEER : " + string(message))
+				socketInfo.OnMessageReceived(string(message))
 			}
 		}
 	}()

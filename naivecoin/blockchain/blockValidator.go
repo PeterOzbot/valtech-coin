@@ -28,20 +28,20 @@ func IsValidNewBlock(newBlock *Block, latestBlock *Block) bool {
 }
 
 //IsValidChain : Validates the whole block chain, including the first genesis block and all the rest.
-func IsValidChain(blockChain []*Block) bool {
-	if blockChain == nil || len(blockChain) == 0 {
+func IsValidChain(blockchain []*Block) bool {
+	if blockchain == nil || len(blockchain) == 0 {
 		return false
 	}
 
 	// lets validate genesis block first
-	if !isGenesisBlockValid(blockChain[0]) {
+	if !isGenesisBlockValid(blockchain[0]) {
 		return false
 	}
 
 	// loop through chain and validate all blocks with each other
-	for index := 1; index < len(blockChain); index++ {
+	for index := 1; index < len(blockchain); index++ {
 
-		if !IsValidNewBlock(blockChain[index], blockChain[index-1]) {
+		if !IsValidNewBlock(blockchain[index], blockchain[index-1]) {
 			return false
 		}
 	}

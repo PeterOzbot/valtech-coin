@@ -1,9 +1,7 @@
 package p2p
 
 import (
-	"encoding/json"
 	"fmt"
-	"naivecoin/blockchain"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,9 +43,16 @@ func AddPeer(c *gin.Context) {
 	if !alreadyConnected {
 
 		if peer != nil {
+
 			// add to list
 			peers = append(peers, peer)
+
+			// peer connected
+			OnPeerConnected(peer)
+
+			// return success
 			c.JSON(http.StatusOK, "Peer added.")
+
 		} else {
 			c.JSON(http.StatusInternalServerError, "Peer initialization failed.")
 		}
@@ -67,8 +72,11 @@ func AddServerPeer(c *gin.Context) {
 	//  add if peer does not already exists
 	if !alreadyConnected {
 		if peer != nil {
+
 			// add to list
 			peers = append(peers, peer)
+
+			// log success
 			fmt.Println("Server added.")
 		} else {
 			fmt.Println("Server initialization failed.")
@@ -89,13 +97,9 @@ func doesPeerExists(id string) bool {
 	return false
 }
 
-//NotifyPeers : Notifies all peers about new block.
-func NotifyPeers(bloc *blockchain.Block, c *gin.Context) {
-	b, err := json.Marshal(bloc)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Serialization failed." + err.Error()})
-	}
+//NotifyPeers : Notifies all peers with new message.
+func NotifyPeers(message string, c *gin.Context) {
 	for _, peer := range peers {
-		peer.SendMessage(string(b))
+		peer.SendMessage(message)
 	}
 }

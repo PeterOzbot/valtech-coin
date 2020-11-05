@@ -1,7 +1,7 @@
 package blockchain
 
-//BlockChain : Current block chain.
-var currentBlockChain []*Block
+//Blockchain : Current block chain.
+var currentBlockchain []*Block
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
 func SelectChain(newChain []*Block, existingChain []*Block) []*Block {
@@ -19,11 +19,39 @@ func SelectChain(newChain []*Block, existingChain []*Block) []*Block {
 	return existingChain
 }
 
-// GetBlockChain : Returns current valid block chain.
-func GetBlockChain() []*Block {
-	if currentBlockChain == nil {
-		currentBlockChain = append(currentBlockChain, GenesisBlock())
+// GetBlockchain : Returns current valid block chain.
+func GetBlockchain() []*Block {
+	if currentBlockchain == nil {
+		currentBlockchain = append(currentBlockchain, GenesisBlock())
 	}
 
-	return currentBlockChain
+	return currentBlockchain
+}
+
+//SetBlockchain : sets block chain.
+func SetBlockchain(blockchain []*Block) {
+	currentBlockchain = blockchain
+}
+
+//GetLatestBlock : Returns latest block in the block chain.
+func GetLatestBlock() *Block {
+	blockchain := GetBlockchain()
+	return blockchain[len(blockchain)-1]
+}
+
+//AddBlockToChain : Adds block to the blockchain.
+func AddBlockToChain(newBlock *Block) {
+	// get latest block
+	latestBlock := GetLatestBlock()
+
+	// check if the blocks are the same and ignore those
+	if newBlock.Hash == latestBlock.Hash {
+		return
+	}
+
+	// check if block is valid and if it is add it
+	if IsValidNewBlock(newBlock, latestBlock) {
+		blockchain := GetBlockchain()
+		SetBlockchain(append(blockchain, newBlock))
+	}
 }

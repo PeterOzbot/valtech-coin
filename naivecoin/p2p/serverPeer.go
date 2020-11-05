@@ -52,8 +52,8 @@ func InitializeServerPeer(c *gin.Context, callerID string) (*SocketInfo, bool) {
 	}
 
 	// hook on message received
-	socketInfo.OnMessageReceived = func(message string) {
-		fmt.Println(message)
+	socketInfo.OnMessageReceived = func(requestMessage string) {
+		OnMessageReceived(requestMessage, socketInfo)
 	}
 
 	go func() {
@@ -64,10 +64,11 @@ func InitializeServerPeer(c *gin.Context, callerID string) (*SocketInfo, bool) {
 				break
 			}
 			if socketInfo.OnMessageReceived != nil {
-				socketInfo.OnMessageReceived("FROM SERVER : " + string(msg))
+				socketInfo.OnMessageReceived(string(msg))
 			}
 		}
 	}()
 
+	// return
 	return socketInfo, false
 }

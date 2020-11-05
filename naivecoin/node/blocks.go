@@ -9,10 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//GetBlockChain : Loads current block chain and serializes it to the context which is returned to the client.
-func GetBlockChain(c *gin.Context) {
-	currentBlockChain := blockchain.GetBlockChain()
-	c.JSON(200, currentBlockChain)
+//GetBlockchain : Loads current block chain and serializes it to the context which is returned to the client.
+func GetBlockchain(c *gin.Context) {
+	currentBlockchain := blockchain.GetBlockchain()
+	c.JSON(200, currentBlockchain)
 }
 
 //Mineblocks : Generates next block.
@@ -31,14 +31,29 @@ func Mineblocks(c *gin.Context) {
 	}
 
 	// get latest block
-	var latestBlock = blockchain.GetBlockChain()[0]
+	var latestBlock = blockchain.GetLatestBlock()
 
 	// create new block
 	var newBlock = blockchain.GenerateBlock(blockData.Data, latestBlock, time.Now().Unix())
 
+	// add new block
+	blockchain.AddBlockToChain(newBlock)
+
 	// notify peers
-	p2p.NotifyPeers(newBlock, c)
+	newBlockMessage := "" //TODO: implement
+	p2p.NotifyPeers(newBlockMessage, c)
 
 	// respond with new block
 	c.JSON(http.StatusOK, newBlock)
+}
+
+//SelectChain :  Used to select new chain when received from other node.
+func SelectChain(newBlockchain []*blockchain.Block) {
+	currentBlockchain := blockchain.GetBlockchain()
+	blockchain.SetBlockchain(blockchain.SelectChain(newBlockchain, currentBlockchain))
+}
+
+//AddBlock : When other peers send new block this process it.
+func AddBlock(newBlock *blockchain.Block) {
+	blockchain.AddBlockToChain(newBlock)
 }
