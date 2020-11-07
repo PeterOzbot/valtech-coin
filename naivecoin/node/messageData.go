@@ -8,12 +8,12 @@ type MessageData struct {
 
 // socket data types
 const (
-	//GetLatestBlockType : node requests latest block
-	GetLatestBlockType = "GetLatestBlock"
-	//LatestBlockType : node receives latest block
-	LatestBlockType = "LatestBlock"
-	//GetBlockchainType :  node requests full block chain
-	GetBlockchainType = "GetBlockchain"
-	//BlockchainType: node receives full block chain
-	BlockchainType = "Blockchain"
+	//QueryLatestBlockType : node requests latest block
+	QueryLatestBlockType = "QueryLatestBlockType"
+	//ResponseLatestBlockType : node sends latest block
+	ResponseLatestBlockType = "ResponseLatestBlockType"
+	//QueryBlockchainType :  node requests full block chain
+	QueryBlockchainType = "QueryBlockchainType"
+	//ResponseBlockchainType: node sends full block chain
+	ResponseBlockchainType = "ResponseBlockchainType"
 )

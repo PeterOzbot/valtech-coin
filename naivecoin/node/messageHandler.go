@@ -9,7 +9,24 @@ import (
 //OnPeerConnected : Prepares message to send when new peer gets connected.
 func OnPeerConnected() (string, error) {
 	message := &MessageData{
-		Type: GetBlockchainType,
+		Type: QueryLatestBlockType,
+	}
+
+	return serialize(message)
+}
+
+//OnMinedBlock : Prepares message to send when new block is mined.
+func OnMinedBlock(newBlock *blockchain.Block) (string, error) {
+	// serialize new block
+	serializedData, err := serialize(newBlock)
+	if err != nil {
+		return "", err
+	}
+
+	// create message
+	message := &MessageData{
+		Type: ResponseLatestBlockType,
+		Data: serializedData,
 	}
 
 	return serialize(message)
@@ -23,20 +40,20 @@ func HandleMessage(message string) (string, error) {
 	}
 
 	switch requestMessage.Type {
-	case GetBlockchainType:
-		return handleGetBlockchain(requestMessage)
-	case BlockchainType:
-		return handleBlockchain(requestMessage)
-	case GetLatestBlockType:
-		return handleGetLatestBlock(requestMessage)
-	case LatestBlockType:
-		return handleLatestBlock(requestMessage)
+	case QueryBlockchainType:
+		return handleQueryBlockchain()
+	case ResponseBlockchainType:
+		return handleResponseBlockchain(requestMessage)
+	case QueryLatestBlockType:
+		return handleQueryLatestBlock()
+	case ResponseLatestBlockType:
+		return handleResponseLatestBlock(requestMessage)
 	}
 
 	return "", errors.New("HandleMessage: request message type not supported")
 }
 
-func handleGetBlockchain(requestMessage *MessageData) (string, error) {
+func handleQueryBlockchain() (string, error) {
 	blockchain := blockchain.GetBlockchain()
 	serializedData, err := serialize(blockchain)
 	if err != nil {
@@ -45,13 +62,13 @@ func handleGetBlockchain(requestMessage *MessageData) (string, error) {
 
 	responseMessage := &MessageData{
 		Data: serializedData,
-		Type: BlockchainType,
+		Type: ResponseBlockchainType,
 	}
 
 	return serialize(responseMessage)
 }
 
-func handleBlockchain(requestMessage *MessageData) (string, error) {
+func handleResponseBlockchain(requestMessage *MessageData) (string, error) {
 	newBlockChain, err := deserializeBlockchain(requestMessage.Data)
 	if err != nil {
 		return "", err
@@ -60,16 +77,19 @@ func handleBlockchain(requestMessage *MessageData) (string, error) {
 	return "", nil
 }
 
-func handleLatestBlock(requestMessage *MessageData) (string, error) {
+func handleResponseLatestBlock(requestMessage *MessageData) (string, error) {
 	newBlock, err := deserializeBlock(requestMessage.Data)
 	if err != nil {
 		return "", err
 	}
-	AddBlock(newBlock)
+	blockAdded := ReceivedBlock(newBlock)
+	if blockAdded {
+		return handleQueryLatestBlock()
+	}
 	return "", nil
 }
 
-func handleGetLatestBlock(requestMessage *MessageData) (string, error) {
+func handleQueryLatestBlock() (string, error) {
 	latestBlock := blockchain.GetLatestBlock()
 	serializedData, err := serialize(latestBlock)
 	if err != nil {
@@ -78,7 +98,7 @@ func handleGetLatestBlock(requestMessage *MessageData) (string, error) {
 
 	responseMessage := &MessageData{
 		Data: serializedData,
-		Type: LatestBlockType,
+		Type: ResponseLatestBlockType,
 	}
 
 	return serialize(responseMessage)

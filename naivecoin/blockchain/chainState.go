@@ -40,18 +40,16 @@ func GetLatestBlock() *Block {
 }
 
 //AddBlockToChain : Adds block to the blockchain.
-func AddBlockToChain(newBlock *Block) {
+func AddBlockToChain(newBlock *Block) bool {
 	// get latest block
 	latestBlock := GetLatestBlock()
-
-	// check if the blocks are the same and ignore those
-	if newBlock.Hash == latestBlock.Hash {
-		return
-	}
 
 	// check if block is valid and if it is add it
 	if IsValidNewBlock(newBlock, latestBlock) {
 		blockchain := GetBlockchain()
 		SetBlockchain(append(blockchain, newBlock))
+		return true
+	} else {
+		return false
 	}
 }

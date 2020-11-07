@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"naivecoin/blockchain"
 	"naivecoin/p2p"
 	"net/http"
@@ -40,8 +41,12 @@ func Mineblocks(c *gin.Context) {
 	blockchain.AddBlockToChain(newBlock)
 
 	// notify peers
-	newBlockMessage := "" //TODO: implement
-	p2p.NotifyPeers(newBlockMessage, c)
+	newBlockMessage, err := OnMinedBlock(newBlock)
+	if err == nil {
+		p2p.NotifyPeers(newBlockMessage, c)
+	} else {
+		fmt.Println("serializing message to notify peers failed : ", err)
+	}
 
 	// respond with new block
 	c.JSON(http.StatusOK, newBlock)
@@ -53,7 +58,20 @@ func SelectChain(newBlockchain []*blockchain.Block) {
 	blockchain.SetBlockchain(blockchain.SelectChain(newBlockchain, currentBlockchain))
 }
 
-//AddBlock : When other peers send new block this process it.
-func AddBlock(newBlock *blockchain.Block) {
-	blockchain.AddBlockToChain(newBlock)
+//ReceivedBlock : When other peers send new block this method process it.
+func ReceivedBlock(newBlock *blockchain.Block) bool {
+	// get latest block
+	latestBlock := blockchain.GetLatestBlock()
+
+	// check if new block is relevant
+	if newBlock.Index > latestBlock.Index {
+
+		// check if new block is next for this node blockchain
+		if newBlock.Hash == latestBlock.PreviousHash {
+			return blockchain.AddBlockToChain(newBlock)
+		}
+	}
+
+	// new block was ignored
+	return false
 }
