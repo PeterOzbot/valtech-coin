@@ -133,3 +133,4 @@ dmypy.json
 
 # executables
 *.exe
+naivecoin/main/main
