@@ -20,7 +20,7 @@ func InitializeServerPeer(c *gin.Context, callerID string) (*SocketInfo, bool) {
 		// },
 	}
 
-	// construct header with url to notify server with caller URL
+	// construct header with url to notify caller with server URL
 	requestHeader := http.Header{}
 	requestHeader.Add(IdentifierHeader, Identifier.ID)
 

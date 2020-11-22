@@ -4,19 +4,19 @@ package blockchain
 var currentBlockchain []*Block
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
-func SelectChain(newChain []*Block, existingChain []*Block) []*Block {
+func SelectChain(newChain []*Block, existingChain []*Block) ([]*Block, bool) {
 	if newChain == nil {
-		return existingChain
+		return existingChain, false
 	}
 	if existingChain == nil {
-		return newChain
+		return newChain, true
 	}
 
 	if IsValidChain(newChain) && len(newChain) > len(existingChain) {
-		return newChain
+		return newChain, true
 	}
 
-	return existingChain
+	return existingChain, false
 }
 
 // GetBlockchain : Returns current valid block chain.
@@ -49,7 +49,7 @@ func AddBlockToChain(newBlock *Block) bool {
 		blockchain := GetBlockchain()
 		SetBlockchain(append(blockchain, newBlock))
 		return true
-	} else {
-		return false
 	}
+
+	return false
 }

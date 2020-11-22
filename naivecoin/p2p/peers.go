@@ -76,6 +76,9 @@ func AddServerPeer(c *gin.Context) {
 			// add to list
 			peers = append(peers, peer)
 
+			// peer connected
+			OnPeerConnected(peer)
+
 			// log success
 			fmt.Println("Server added.")
 		} else {
@@ -98,7 +101,7 @@ func doesPeerExists(id string) bool {
 }
 
 //NotifyPeers : Notifies all peers with new message.
-func NotifyPeers(message string, c *gin.Context) {
+func NotifyPeers(message string) {
 	for _, peer := range peers {
 		peer.SendMessage(message)
 	}

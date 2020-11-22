@@ -1,7 +1,6 @@
 package node
 
 import (
-	"encoding/json"
 	"errors"
 	"naivecoin/blockchain"
 )
@@ -15,8 +14,8 @@ func OnPeerConnected() (string, error) {
 	return serialize(message)
 }
 
-//OnMinedBlock : Prepares message to send when new block is mined.
-func OnMinedBlock(newBlock *blockchain.Block) (string, error) {
+//OnNewBlock : Prepares message to send when new block is added.
+func OnNewBlock(newBlock *blockchain.Block) (string, error) {
 	// serialize new block
 	serializedData, err := serialize(newBlock)
 	if err != nil {
@@ -53,6 +52,7 @@ func HandleMessage(message string) (string, error) {
 	return "", errors.New("HandleMessage: request message type not supported")
 }
 
+// the chain is requested
 func handleQueryBlockchain() (string, error) {
 	blockchain := blockchain.GetBlockchain()
 	serializedData, err := serialize(blockchain)
@@ -68,6 +68,7 @@ func handleQueryBlockchain() (string, error) {
 	return serialize(responseMessage)
 }
 
+// whole chain is received
 func handleResponseBlockchain(requestMessage *MessageData) (string, error) {
 	newBlockChain, err := deserializeBlockchain(requestMessage.Data)
 	if err != nil {
@@ -77,18 +78,26 @@ func handleResponseBlockchain(requestMessage *MessageData) (string, error) {
 	return "", nil
 }
 
+// new block is received
 func handleResponseLatestBlock(requestMessage *MessageData) (string, error) {
 	newBlock, err := deserializeBlock(requestMessage.Data)
 	if err != nil {
 		return "", err
 	}
-	blockAdded := ReceivedBlock(newBlock)
-	if blockAdded {
-		return handleQueryLatestBlock()
+
+	// try to add new block and determine if sender's whole chain may be required
+	queryWholeChain := ReceivedBlock(newBlock)
+	if queryWholeChain {
+		message := &MessageData{
+			Type: QueryBlockchainType,
+		}
+
+		return serialize(message)
 	}
 	return "", nil
 }
 
+// latest block was requested
 func handleQueryLatestBlock() (string, error) {
 	latestBlock := blockchain.GetLatestBlock()
 	serializedData, err := serialize(latestBlock)
@@ -102,39 +111,4 @@ func handleQueryLatestBlock() (string, error) {
 	}
 
 	return serialize(responseMessage)
-}
-
-func serialize(data interface{}) (string, error) {
-	b, err := json.Marshal(data)
-	if err != nil {
-		return "", err
-	}
-	return string(b), nil
-}
-
-func deserialize(data string) (*MessageData, error) {
-	messageData := MessageData{}
-	err := json.Unmarshal([]byte(data), &messageData)
-	if err != nil {
-		return nil, err
-	}
-	return &messageData, nil
-}
-
-func deserializeBlock(data string) (*blockchain.Block, error) {
-	messageData := &blockchain.Block{}
-	err := json.Unmarshal([]byte(data), messageData)
-	if err != nil {
-		return nil, err
-	}
-	return messageData, nil
-}
-
-func deserializeBlockchain(data string) ([]*blockchain.Block, error) {
-	blockchain := make([]*blockchain.Block, 0)
-	err := json.Unmarshal([]byte(data), &blockchain)
-	if err != nil {
-		return nil, err
-	}
-	return blockchain, nil
 }

@@ -40,13 +40,8 @@ func Mineblocks(c *gin.Context) {
 	// add new block
 	blockchain.AddBlockToChain(newBlock)
 
-	// notify peers
-	newBlockMessage, err := OnMinedBlock(newBlock)
-	if err == nil {
-		p2p.NotifyPeers(newBlockMessage, c)
-	} else {
-		fmt.Println("serializing message to notify peers failed : ", err)
-	}
+	// new block was added notify peers
+	notifyPeers(newBlock)
 
 	// respond with new block
 	c.JSON(http.StatusOK, newBlock)
@@ -54,24 +49,52 @@ func Mineblocks(c *gin.Context) {
 
 //SelectChain :  Used to select new chain when received from other node.
 func SelectChain(newBlockchain []*blockchain.Block) {
+	// get current block chain
 	currentBlockchain := blockchain.GetBlockchain()
-	blockchain.SetBlockchain(blockchain.SelectChain(newBlockchain, currentBlockchain))
+
+	// select chain, current or new one
+	selectedChain, newChainWasSelected := blockchain.SelectChain(newBlockchain, currentBlockchain)
+
+	// set new chain
+	blockchain.SetBlockchain(selectedChain)
+
+	// if new chain was selected notify peers
+	if newChainWasSelected {
+		// get latest block and notify peers
+		latestBlock := blockchain.GetLatestBlock()
+		notifyPeers(latestBlock)
+	}
 }
 
 //ReceivedBlock : When other peers send new block this method process it.
+// if the whole chain must be queried then the result is true
 func ReceivedBlock(newBlock *blockchain.Block) bool {
-	// get latest block
+	// get this node's latest block
 	latestBlock := blockchain.GetLatestBlock()
 
 	// check if new block is relevant
 	if newBlock.Index > latestBlock.Index {
 
-		// check if new block is next for this node blockchain
-		if newBlock.Hash == latestBlock.PreviousHash {
-			return blockchain.AddBlockToChain(newBlock)
+		// if new block is not added and its index is greater then this node's latest block, the whole chain may be stale
+		if !blockchain.AddBlockToChain(newBlock) {
+			return true
 		}
+
+		// new block was added notify peers
+		notifyPeers(newBlock)
 	}
 
-	// new block was ignored
+	// new block was ignored or added, either way the chain is not needed
 	return false
+}
+
+// notifies all peers about new block
+func notifyPeers(newBlock *blockchain.Block) {
+	// notify peers
+	newBlockMessage, err := OnNewBlock(newBlock)
+	if err == nil {
+		p2p.NotifyPeers(newBlockMessage)
+	} else {
+		fmt.Println("serializing message to notify peers failed : ", err)
+	}
 }
