@@ -23,6 +23,11 @@ func IsValidNewBlock(newBlock *Block, latestBlock *Block) bool {
 		return false
 	}
 
+	// validates if hash matches difficulty
+	if !newBlock.HashMatchesDifficulty() {
+		return false
+	}
+
 	// new block is valid
 	return true
 }
