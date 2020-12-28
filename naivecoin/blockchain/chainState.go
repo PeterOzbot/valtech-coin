@@ -1,6 +1,9 @@
 package blockchain
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 //Blockchain : Current block chain.
 var currentBlockchain []*Block
@@ -14,11 +17,17 @@ func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp tim
 		return newChain, true
 	}
 
-	if IsValidChain(newChain, currentTimestamp) && len(newChain) > len(existingChain) {
-		return newChain, true
+	// checks if chain is valid
+	if !IsValidChain(newChain, currentTimestamp) {
+		return existingChain, false
 	}
 
-	return existingChain, false
+	// check if new has larger accumulated difficulty
+	if !checkAccumulatedDifficulty(newChain, existingChain) {
+		return existingChain, false
+	}
+
+	return newChain, true
 }
 
 // GetBlockchain : Returns current valid block chain.
@@ -45,4 +54,22 @@ func AddBlockToChain(latestBlock *Block, newBlock *Block, currentBlockchain []*B
 	}
 
 	return false
+}
+
+// returns true if new chain has larger accumulated difficulty
+func checkAccumulatedDifficulty(newChain []*Block, existingChain []*Block) bool {
+	// calculate accumulated difficulty
+	var newChainAccumulatedDifficulty = calculateAccumulatedDifficulty(newChain)
+	var existingChainAccumulatedDifficulty = calculateAccumulatedDifficulty(existingChain)
+
+	// return if new is larger
+	return newChainAccumulatedDifficulty > existingChainAccumulatedDifficulty
+}
+
+func calculateAccumulatedDifficulty(chain []*Block) int64 {
+	var accumulatedDifficulty int64 = 0
+	for _, block := range chain {
+		accumulatedDifficulty += int64(math.Pow(float64(block.Difficulty), 2))
+	}
+	return accumulatedDifficulty
 }
