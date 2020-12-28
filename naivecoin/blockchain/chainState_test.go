@@ -11,7 +11,7 @@ func Test_SelectChain_NewChainNull(t *testing.T) {
 	existingChain := make([]*Block, 1)
 
 	// validate block
-	result, newSelected := SelectChain(nil, existingChain)
+	result, newSelected := SelectChain(nil, existingChain, time.Unix(int64(0), 0))
 
 	// result should not null as existing chain should be selected
 	if result == nil || cap(result) != 1 {
@@ -28,7 +28,7 @@ func Test_SelectChain_ExistingChainNull(t *testing.T) {
 	newChain := make([]*Block, 1)
 
 	// validate block
-	result, newSelected := SelectChain(newChain, nil)
+	result, newSelected := SelectChain(newChain, nil, time.Unix(int64(0), 0))
 
 	// result should not null as new chain should be selected
 	if result == nil || cap(result) != 1 {
@@ -55,7 +55,7 @@ func Test_SelectChain_InvalidLonger(t *testing.T) {
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected := SelectChain(newChain, existingChain)
+	result, newSelected := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
 
 	// the selected chain should be existing which has length of 1
 	if result == nil || len(result) > 1 {
@@ -83,7 +83,7 @@ func Test_SelectChain_ValidShorter(t *testing.T) {
 	newChain := prepareChain()
 
 	// validate block
-	result, newSelected := SelectChain(newChain, existingChain)
+	result, newSelected := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
 
 	// result should be existing chain with length of 2
 	if result == nil || len(result) <= 1 {
@@ -96,6 +96,8 @@ func Test_SelectChain_ValidShorter(t *testing.T) {
 
 //Test_SelectChain_ValidLonger : Tests if the new valid longer chain is selected.
 func Test_SelectChain_ValidLonger(t *testing.T) {
+	// current time
+	var currentTimestamp = time.Now()
 	// create testing chain with genesis block and add another
 	existingChain := prepareChain()
 
@@ -105,13 +107,13 @@ func Test_SelectChain_ValidLonger(t *testing.T) {
 		Index:        1,
 		Data:         "My second block. HaHaHa",
 		PreviousHash: newChain[0].Hash,
-		Timestamp:    time.Now(),
+		Timestamp:    currentTimestamp,
 	}
 	secondBlock.Hash = secondBlock.CalculateHash()
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected := SelectChain(newChain, existingChain)
+	result, newSelected := SelectChain(newChain, existingChain, currentTimestamp)
 
 	// result should be new chain with length of 2
 	if result == nil || len(result) < 2 {

@@ -11,7 +11,6 @@ func (block *Block) HashMatchesDifficulty() bool {
 	// convert hash to byte array
 	byteHash, err := hex.DecodeString(block.Hash)
 	if err != nil {
-		fmt.Println("converting hash to bytes failed: ", err)
 		return false
 	}
 

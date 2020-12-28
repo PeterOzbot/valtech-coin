@@ -23,7 +23,7 @@ func Test_ValidatesChain_Empty(t *testing.T) {
 	chain := make([]*Block, 0)
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be negative as the chain is empty
 	if result {
@@ -37,7 +37,7 @@ func Test_ValidatesChain_Null(t *testing.T) {
 	var chain []*Block
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be negative as the chain is null
 	if result {
@@ -51,7 +51,7 @@ func Test_ValidatesChain_GenesisBlock(t *testing.T) {
 	chain := prepareChain()
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be positive
 	if !result {
@@ -64,10 +64,10 @@ func Test_ValidatesChain_InvalidGenesisBlock(t *testing.T) {
 	// create testing chain with genesis block
 	chain := prepareChain()
 	// break block
-	chain[0].Hash = "asdasd"
+	chain[0].Hash = "fake hash"
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be false as the genesis block is not valid
 	if result {
@@ -77,6 +77,8 @@ func Test_ValidatesChain_InvalidGenesisBlock(t *testing.T) {
 
 //Test_ValidatesChain_SecondBlock : Tests if the chain validation validates second block.
 func Test_ValidatesChain_SecondBlock(t *testing.T) {
+	// current time
+	var currentTimestamp = time.Now()
 	// create testing chain with genesis block
 	chain := prepareChain()
 	// create second block and add
@@ -84,13 +86,13 @@ func Test_ValidatesChain_SecondBlock(t *testing.T) {
 		Index:        1,
 		Data:         "My second block. HaHaHa",
 		PreviousHash: chain[0].Hash,
-		Timestamp:    time.Now(),
+		Timestamp:    currentTimestamp,
 	}
 	secondBlock.Hash = secondBlock.CalculateHash()
 	chain = append(chain, secondBlock)
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, currentTimestamp)
 
 	// result should be positive
 	if !result {
@@ -122,7 +124,7 @@ func Test_ValidatesChain_ThirdInvalidBlock(t *testing.T) {
 	chain = append(chain, thirdBlock)
 
 	// validate block
-	result := IsValidChain(chain)
+	result := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be false
 	if result {

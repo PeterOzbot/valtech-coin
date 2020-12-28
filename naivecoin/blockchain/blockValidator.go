@@ -1,7 +1,9 @@
 package blockchain
 
+import "time"
+
 //IsValidNewBlock : Checks if new block is valid regarding the latest block.
-func IsValidNewBlock(newBlock *Block, latestBlock *Block) bool {
+func IsValidNewBlock(newBlock *Block, latestBlock *Block, currentTimestamp time.Time) bool {
 	if newBlock == nil || latestBlock == nil {
 		return false
 	}
@@ -28,12 +30,17 @@ func IsValidNewBlock(newBlock *Block, latestBlock *Block) bool {
 		return false
 	}
 
+	// validate timestamp
+	if !newBlock.ValidateTimestamp(latestBlock, currentTimestamp) {
+		return false
+	}
+
 	// new block is valid
 	return true
 }
 
 //IsValidChain : Validates the whole block chain, including the first genesis block and all the rest.
-func IsValidChain(blockchain []*Block) bool {
+func IsValidChain(blockchain []*Block, currentTimestamp time.Time) bool {
 	if blockchain == nil || len(blockchain) == 0 {
 		return false
 	}
@@ -46,7 +53,7 @@ func IsValidChain(blockchain []*Block) bool {
 	// loop through chain and validate all blocks with each other
 	for index := 1; index < len(blockchain); index++ {
 
-		if !IsValidNewBlock(blockchain[index], blockchain[index-1]) {
+		if !IsValidNewBlock(blockchain[index], blockchain[index-1], currentTimestamp) {
 			return false
 		}
 	}
@@ -58,6 +65,7 @@ func isGenesisBlockValid(block *Block) bool {
 	// generate genesis block
 	genesisBlock := GenesisBlock()
 
+	// validate block values
 	if genesisBlock.Data != block.Data {
 		return false
 	}
@@ -79,4 +87,13 @@ func isGenesisBlockValid(block *Block) bool {
 	}
 
 	return true
+}
+
+//ValidateTimestamp : Checks if block timestamp is not too much in the future or in the past.
+func (block *Block) ValidateTimestamp(latestBlock *Block, currentTimestamp time.Time) bool {
+
+	// block should not be in the future more that 60s
+	return block.Timestamp.Unix() <= currentTimestamp.Unix()+60 &&
+		// block should not be more that 60s in the past from latest block
+		block.Timestamp.Unix() >= latestBlock.Timestamp.Unix()-60
 }

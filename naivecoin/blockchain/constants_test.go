@@ -4,13 +4,13 @@ import (
 	"testing"
 )
 
-// Test_GenesisBlock : Tests the hash from genesis block.
+// Test_GenesisBlock : Tests the hash and validity of the genesis block.
 func Test_GenesisBlock(t *testing.T) {
 	// create genesis block
 	genesisBlock := GenesisBlock()
 
 	// block data
-	hash := "8d46e9fd83ead04cb38e6150130d556b97adf40cc865842395c1400ce48f724b"
+	hash := genesisBlock.CalculateHash()
 	previousHash := ""
 	index := 0
 

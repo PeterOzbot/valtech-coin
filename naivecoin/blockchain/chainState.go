@@ -1,10 +1,12 @@
 package blockchain
 
+import "time"
+
 //Blockchain : Current block chain.
 var currentBlockchain []*Block
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
-func SelectChain(newChain []*Block, existingChain []*Block) ([]*Block, bool) {
+func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool) {
 	if newChain == nil {
 		return existingChain, false
 	}
@@ -12,7 +14,7 @@ func SelectChain(newChain []*Block, existingChain []*Block) ([]*Block, bool) {
 		return newChain, true
 	}
 
-	if IsValidChain(newChain) && len(newChain) > len(existingChain) {
+	if IsValidChain(newChain, currentTimestamp) && len(newChain) > len(existingChain) {
 		return newChain, true
 	}
 
@@ -33,21 +35,12 @@ func SetBlockchain(blockchain []*Block) {
 	currentBlockchain = blockchain
 }
 
-//GetLatestBlock : Returns latest block in the block chain.
-func GetLatestBlock() *Block {
-	blockchain := GetBlockchain()
-	return blockchain[len(blockchain)-1]
-}
-
 //AddBlockToChain : Adds block to the blockchain.
-func AddBlockToChain(newBlock *Block) bool {
-	// get latest block
-	latestBlock := GetLatestBlock()
+func AddBlockToChain(latestBlock *Block, newBlock *Block, currentBlockchain []*Block, currentTimestamp time.Time) bool {
 
 	// check if block is valid and if it is add it
-	if IsValidNewBlock(newBlock, latestBlock) {
-		blockchain := GetBlockchain()
-		SetBlockchain(append(blockchain, newBlock))
+	if IsValidNewBlock(newBlock, latestBlock, currentTimestamp) {
+		SetBlockchain(append(currentBlockchain, newBlock))
 		return true
 	}
 

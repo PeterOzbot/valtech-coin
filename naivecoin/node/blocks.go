@@ -31,14 +31,8 @@ func Mineblocks(c *gin.Context) {
 		return
 	}
 
-	// get latest block
-	var latestBlock = blockchain.GetLatestBlock()
-
-	// create new block
-	var newBlock = blockchain.GenerateBlock(blockData.Data, latestBlock, time.Now().Unix())
-
-	// add new block
-	blockchain.AddBlockToChain(newBlock)
+	// generate and mine block
+	newBlock := generateNewBlock(blockData)
 
 	// new block was added notify peers
 	notifyPeers(newBlock)
@@ -52,8 +46,11 @@ func SelectChain(newBlockchain []*blockchain.Block) {
 	// get current block chain
 	currentBlockchain := blockchain.GetBlockchain()
 
+	// get current time
+	var currentTimestamp = time.Now()
+
 	// select chain, current or new one
-	selectedChain, newChainWasSelected := blockchain.SelectChain(newBlockchain, currentBlockchain)
+	selectedChain, newChainWasSelected := blockchain.SelectChain(newBlockchain, currentBlockchain, currentTimestamp)
 
 	// set new chain
 	blockchain.SetBlockchain(selectedChain)
@@ -61,7 +58,7 @@ func SelectChain(newBlockchain []*blockchain.Block) {
 	// if new chain was selected notify peers
 	if newChainWasSelected {
 		// get latest block and notify peers
-		latestBlock := blockchain.GetLatestBlock()
+		latestBlock := currentBlockchain[len(currentBlockchain)-1]
 		notifyPeers(latestBlock)
 	}
 }
@@ -70,13 +67,17 @@ func SelectChain(newBlockchain []*blockchain.Block) {
 // if the whole chain must be queried then the result is true
 func ReceivedBlock(newBlock *blockchain.Block) bool {
 	// get this node's latest block
-	latestBlock := blockchain.GetLatestBlock()
+	currentBlockchain := blockchain.GetBlockchain()
+	latestBlock := currentBlockchain[len(currentBlockchain)-1]
+
+	// get current timestamp
+	var currentTimestamp = time.Now()
 
 	// check if new block is relevant
 	if newBlock.Index > latestBlock.Index {
 
 		// if new block is not added and its index is greater then this node's latest block, the whole chain may be stale
-		if !blockchain.AddBlockToChain(newBlock) {
+		if !blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp) {
 			return true
 		}
 
@@ -86,6 +87,31 @@ func ReceivedBlock(newBlock *blockchain.Block) bool {
 
 	// new block was ignored or added, either way the chain is not needed
 	return false
+}
+
+//generates/mines new block and adds it to the internal blockchain
+func generateNewBlock(blockData *BlockData) *blockchain.Block {
+	// get current block chain
+	var currentBlockchain = blockchain.GetBlockchain()
+	var latestBlock = currentBlockchain[len(currentBlockchain)-1]
+
+	// determine current difficulty
+	var difficulty = blockchain.GetDifficulty(latestBlock, currentBlockchain, blockchain.BlockGenerationInterval, blockchain.DifficultyAdjustmentInterval)
+
+	// current time
+	var currentTimestamp = time.Now()
+
+	// create new block
+	var newBlock = blockchain.GenerateBlock(blockData.Data, latestBlock, currentTimestamp, difficulty)
+
+	// mine this block
+	newBlock.MineBlock()
+
+	// add new block
+	blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp)
+
+	// return generated and mined block
+	return newBlock
 }
 
 // notifies all peers about new block
