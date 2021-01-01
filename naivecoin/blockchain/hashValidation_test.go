@@ -8,7 +8,7 @@ import (
 func Test_HashMatchesDifficulty_HashCantBeParsed(t *testing.T) {
 	// create example block
 	var block *Block = &Block{
-		Hash: "blablalbalblablablalbalbl",
+		Hash: "invalid hash",
 	}
 
 	// validate block

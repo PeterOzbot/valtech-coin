@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Test_NilInpout : Tests if hashing handles nil input without failing.
-func Test_NilInput(t *testing.T) {
+// Test_CalculateHash_NilInpout : Tests if hashing handles nil input without failing.
+func Test_CalculateHash_NilInput(t *testing.T) {
 
 	// create nil block
 	var block *Block
@@ -20,8 +20,8 @@ func Test_NilInput(t *testing.T) {
 	}
 }
 
-// Test_CorrectHash : Tests if hashing creates correct hash value.
-func Test_CorrectHash(t *testing.T) {
+// Test_CalculateHash_CorrectHash : Tests if hashing creates correct hash value.
+func Test_CalculateHash_CorrectHash(t *testing.T) {
 
 	// create example block
 	var block *Block = &Block{
@@ -45,8 +45,8 @@ func Test_CorrectHash(t *testing.T) {
 	}
 }
 
-// Test_MineBlock : Tests if hash is correctly mined.
-func Test_MineBlock(t *testing.T) {
+// Test_MineBlock_MineBlock : Tests if hash is correctly mined.
+func Test_MineBlock_MineBlock(t *testing.T) {
 	var block = &Block{
 		Index:        0,
 		Hash:         "",
@@ -63,10 +63,10 @@ func Test_MineBlock(t *testing.T) {
 	// result should be correct hash
 	expectedHash := "07cd44e61db86462cd7727374f59a5c6cbe02c896746b44322e195d1f88b10f2"
 	if block.Hash != expectedHash {
-		t.Errorf("minig result is incorrect, Actual: %s Expected: %s", block.Hash, expectedHash)
+		t.Errorf("mining result is incorrect, Actual: %s Expected: %s", block.Hash, expectedHash)
 	}
 	expectedNonce := 32
 	if block.Nonce != expectedNonce {
-		t.Errorf("minig result is incorrect, Actual: %d Expected: %d", block.Nonce, expectedNonce)
+		t.Errorf("mining result is incorrect, Actual: %d Expected: %d", block.Nonce, expectedNonce)
 	}
 }

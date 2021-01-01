@@ -17,8 +17,8 @@ func prepareChain() []*Block {
 	return chain
 }
 
-//Test_ValidatesChain_Empty : Tests if the chain validation validates empty chain.
-func Test_ValidatesChain_Empty(t *testing.T) {
+//Test_IsValidChain_Empty : Tests if the chain validation validates empty chain.
+func Test_IsValidChain_Empty(t *testing.T) {
 	// create null chain
 	chain := make([]*Block, 0)
 
@@ -31,8 +31,8 @@ func Test_ValidatesChain_Empty(t *testing.T) {
 	}
 }
 
-//Test_ValidatesChain_Null : Tests if the chain validation validates Null chain.
-func Test_ValidatesChain_Null(t *testing.T) {
+//Test_IsValidChain_Null : Tests if the chain validation validates Null chain.
+func Test_IsValidChain_Null(t *testing.T) {
 	// declare chain
 	var chain []*Block
 
@@ -46,7 +46,7 @@ func Test_ValidatesChain_Null(t *testing.T) {
 }
 
 //Test_ValidatesGenesisBlock : Tests if the chain validation validates valid genesis block.
-func Test_ValidatesChain_GenesisBlock(t *testing.T) {
+func Test_IsValidChain_GenesisBlock(t *testing.T) {
 	// create testing chain with genesis block
 	chain := prepareChain()
 
@@ -59,8 +59,8 @@ func Test_ValidatesChain_GenesisBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesChain_InvalidGenesisBlock : Tests if the chain validation validates invalid genesis block.
-func Test_ValidatesChain_InvalidGenesisBlock(t *testing.T) {
+//Test_IsValidChain_InvalidGenesisBlock : Tests if the chain validation validates invalid genesis block.
+func Test_IsValidChain_InvalidGenesisBlock(t *testing.T) {
 	// create testing chain with genesis block
 	chain := prepareChain()
 	// break block
@@ -75,8 +75,8 @@ func Test_ValidatesChain_InvalidGenesisBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesChain_SecondBlock : Tests if the chain validation validates second block.
-func Test_ValidatesChain_SecondBlock(t *testing.T) {
+//Test_IsValidChain_SecondBlock : Tests if the chain validation validates second block.
+func Test_IsValidChain_SecondBlock(t *testing.T) {
 	// current time
 	var currentTimestamp = time.Now()
 	// create testing chain with genesis block
@@ -100,8 +100,8 @@ func Test_ValidatesChain_SecondBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesChain_ThirdBlock : Tests if the chain validation validates third invalid block.
-func Test_ValidatesChain_ThirdInvalidBlock(t *testing.T) {
+//Test_IsValidChain_ThirdBlock : Tests if the chain validation validates third invalid block.
+func Test_IsValidChain_ThirdInvalidBlock(t *testing.T) {
 	// create testing chain with genesis block
 	chain := prepareChain()
 	// create second block and add

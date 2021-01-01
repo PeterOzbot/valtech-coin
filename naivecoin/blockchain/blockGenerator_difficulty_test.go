@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-//Test_GetDifficultyGenesisOnlyChain : Tests if correct difficulty is returned if only genesis block is in the blockchain.
-func Test_GetDifficultyGenesisOnlyChain(t *testing.T) {
+//Test_GetDifficulty_GenesisOnlyChain : Tests if correct difficulty is returned if only genesis block is in the blockchain.
+func Test_GetDifficulty_GenesisOnlyChain(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 0
 	difficultyAdjustmentInterval := 0
@@ -25,8 +25,8 @@ func Test_GetDifficultyGenesisOnlyChain(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyAdjustmentIntervalLargerThanBlockchain : Tests if correct difficulty is returned if DifficultyAdjustmentInterval is larger that the number of blocks in block chain.
-func Test_GetDifficultyAdjustmentIntervalLargerThanBlockchain(t *testing.T) {
+//Test_GetDifficulty_AdjustmentIntervalLargerThanBlockchain : Tests if correct difficulty is returned if DifficultyAdjustmentInterval is larger that the number of blocks in block chain.
+func Test_GetDifficulty_AdjustmentIntervalLargerThanBlockchain(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 0
 	difficultyAdjustmentInterval := 10
@@ -45,8 +45,8 @@ func Test_GetDifficultyAdjustmentIntervalLargerThanBlockchain(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyBelowZero : Tests if difficulty is not decreased below zero.
-func Test_GetDifficultyBelowZero(t *testing.T) {
+//Test_GetDifficulty_BelowZero : Tests if difficulty is not decreased below zero.
+func Test_GetDifficulty_BelowZero(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 10
 	difficultyAdjustmentInterval := 1
@@ -85,9 +85,9 @@ func Test_GetDifficultyBelowZero(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyBelowZero : Tests if difficulty is calculated only on difficultyAdjustmentInterval-nt block.
+//Test_GetDifficulty_BelowZero : Tests if difficulty is calculated only on difficultyAdjustmentInterval-nt block.
 // in this test the difficulty should not be calculated and result should be latest's difficulty
-func Test_GetDifficultyMultipleBlocks(t *testing.T) {
+func Test_GetDifficulty_MultipleBlocks(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 10
 	difficultyAdjustmentInterval := 3
@@ -123,11 +123,11 @@ func Test_GetDifficultyMultipleBlocks(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyIncreased : Tests if difficulty is increased when time between blocks is two times smaller than expected.
+//Test_GetDifficulty_Increased : Tests if difficulty is increased when time between blocks is two times smaller than expected.
 //difficulty increses if difference in timestamp between latest and adjusted block is less than half of expected
 //adjusted block is located with difficultyAdjustmentInterval
 //expected time is difficultyAdjustmentInterval*blockGenerationInterval
-func Test_GetDifficultyIncreased(t *testing.T) {
+func Test_GetDifficulty_Increased(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 10
 	difficultyAdjustmentInterval := 1
@@ -166,11 +166,11 @@ func Test_GetDifficultyIncreased(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyDecreased : Tests if difficulty is decreased when time between blocks is two times larger than expected.
+//Test_GetDifficulty_Decreased : Tests if difficulty is decreased when time between blocks is two times larger than expected.
 //difficulty decreases if difference in timestamp between latest and adjusted block is more than double of expected
 //adjusted block is located with difficultyAdjustmentInterval
 //expected time is difficultyAdjustmentInterval*blockGenerationInterval
-func Test_GetDifficultyDecreased(t *testing.T) {
+func Test_GetDifficulty_Decreased(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 10
 	difficultyAdjustmentInterval := 1
@@ -209,11 +209,11 @@ func Test_GetDifficultyDecreased(t *testing.T) {
 	}
 }
 
-//Test_GetDifficultyNoChanges : Tests if difficulty stays the same when time between blocks is the same as expected.
+//Test_GetDifficulty_NoChanges : Tests if difficulty stays the same when time between blocks is the same as expected.
 //difficulty stays the same if difference in timestamp between latest and adjusted block is not less than half of expected or twice as large
 //adjusted block is located with difficultyAdjustmentInterval
 //expected time is difficultyAdjustmentInterval*blockGenerationInterval
-func Test_GetDifficultyNoChanges(t *testing.T) {
+func Test_GetDifficulty_NoChanges(t *testing.T) {
 	// intervals
 	blockGenerationInterval := 10
 	difficultyAdjustmentInterval := 1

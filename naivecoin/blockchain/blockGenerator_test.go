@@ -7,8 +7,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-//Test_HandleNilInput : Tests if the generator does not crash if it gets nil as input.
-func Test_HandleNilInput(t *testing.T) {
+//Test_GenerateBlock_HandleNilInput : Tests if the generator does not crash if it gets nil as input.
+func Test_GenerateBlock_HandleNilInput(t *testing.T) {
 	// try to generate block
 	result := GenerateBlock("empty", nil, time.Unix(int64(0), 0), 0)
 
@@ -18,8 +18,8 @@ func Test_HandleNilInput(t *testing.T) {
 	}
 }
 
-//Test_GeneratesCorrectBlock : Tests if the generator generates correct block from data and previous block.
-func Test_GeneratesCorrectBlock(t *testing.T) {
+//Test_GenerateBlock_GeneratesCorrectBlock : Tests if the generator generates correct block from data and previous block.
+func Test_GenerateBlock_GeneratesCorrectBlock(t *testing.T) {
 	// create example block
 	var latestBlock *Block = &Block{
 		Index:        15,

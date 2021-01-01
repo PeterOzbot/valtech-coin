@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-//Test_ValidatesValidNewBlock : Tests if the validation handles nil input for the new block.
-func Test_ValidatesNilNewBlock(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesValidNewBlock : Tests if the validation handles nil input for the new block.
+func Test_IsValidNewBlock_ValidatesNilNewBlock(t *testing.T) {
 	// create example blocks
 	var latestBlock *Block = &Block{}
 
@@ -19,8 +19,8 @@ func Test_ValidatesNilNewBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesNilLatestBlock : Tests if the validation handles nil input for the latest block.
-func Test_ValidatesNilLatestBlock(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesNilLatestBlock : Tests if the validation handles nil input for the latest block.
+func Test_IsValidNewBlock_ValidatesNilLatestBlock(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{}
 
@@ -33,8 +33,8 @@ func Test_ValidatesNilLatestBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesIndex : Tests if the validation validates index on the new block.
-func Test_ValidatesIndex(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesIndex : Tests if the validation validates index on the new block.
+func Test_IsValidNewBlock_ValidatesIndex(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        0,
@@ -60,8 +60,8 @@ func Test_ValidatesIndex(t *testing.T) {
 	}
 }
 
-//Test_ValidatesPreviousHash : Tests if the validation validates PreviousHash on the new block.
-func Test_ValidatesPreviousHash(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesPreviousHash : Tests if the validation validates PreviousHash on the new block.
+func Test_IsValidNewBlock_ValidatesPreviousHash(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
@@ -87,8 +87,8 @@ func Test_ValidatesPreviousHash(t *testing.T) {
 	}
 }
 
-//Test_ValidatesHash : Tests if the validation validates Hash on the new block.
-func Test_ValidatesHash(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesHash : Tests if the validation validates Hash on the new block.
+func Test_IsValidNewBlock_ValidatesHash(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
@@ -114,8 +114,8 @@ func Test_ValidatesHash(t *testing.T) {
 	}
 }
 
-//Test_ValidatesDifficulty : Tests if the validation validates Difficulty on the new block.
-func Test_ValidatesDifficulty(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesDifficulty : Tests if the validation validates Difficulty on the new block.
+func Test_IsValidNewBlock_ValidatesDifficulty(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
@@ -143,9 +143,9 @@ func Test_ValidatesDifficulty(t *testing.T) {
 	}
 }
 
-//Test_ValidatesTimestamp : Tests if the validation validates timestamp on the new block regarding previous block.
+//Test_IsValidNewBlock_ValidatesTimestamp : Tests if the validation validates timestamp on the new block regarding previous block.
 // new block should not have its timestamp more that 60s in the past from latest block
-func Test_ValidatesTimestampPreviousBlock(t *testing.T) {
+func Test_IsValidNewBlock_ValidatesTimestampPreviousBlock(t *testing.T) {
 	// create example blocks
 	var newBlockTimestamp = int64(1588430083866862505)
 	var newBlock *Block = &Block{
@@ -174,9 +174,9 @@ func Test_ValidatesTimestampPreviousBlock(t *testing.T) {
 	}
 }
 
-//Test_ValidatesTimestamp : Tests if the validation validates timestamp on the new block regarding current time.
+//Test_IsValidNewBlock_ValidatesTimestamp : Tests if the validation validates timestamp on the new block regarding current time.
 // if new block has its timestamp more that 60s in the future its invalid
-func Test_ValidatesTimestampCurrentTime(t *testing.T) {
+func Test_IsValidNewBlock_ValidatesTimestampCurrentTime(t *testing.T) {
 	// create example blocks
 	var newBlockTimestamp = int64(1588430083866862505)
 	var newBlock *Block = &Block{
@@ -205,8 +205,8 @@ func Test_ValidatesTimestampCurrentTime(t *testing.T) {
 	}
 }
 
-//Test_ValidatesValidNewBlock : Tests if the validation validates valid new block as valid.
-func Test_ValidatesValidNewBlock(t *testing.T) {
+//Test_IsValidNewBlock_ValidatesValidNewBlock : Tests if the validation validates valid new block as valid.
+func Test_IsValidNewBlock_ValidatesValidNewBlock(t *testing.T) {
 	// current time
 	var currentTimestamp = time.Unix(1588430083866862505, 0)
 	// create example blocks

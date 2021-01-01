@@ -38,7 +38,7 @@ func Test_isGenesisBlockValid_Index(t *testing.T) {
 func Test_isGenesisBlockValid_Hash(t *testing.T) {
 	// create testing block and brake it
 	block := GenesisBlock()
-	block.Hash = "asdasd"
+	block.Hash = "invalid has"
 
 	// validate block
 	result := isGenesisBlockValid(block)
@@ -53,7 +53,7 @@ func Test_isGenesisBlockValid_Hash(t *testing.T) {
 func Test_isGenesisBlockValid_Data(t *testing.T) {
 	// create testing block and brake it
 	block := GenesisBlock()
-	block.Data = "asdasd"
+	block.Data = "invalid has"
 
 	// validate block
 	result := isGenesisBlockValid(block)
@@ -68,7 +68,7 @@ func Test_isGenesisBlockValid_Data(t *testing.T) {
 func Test_isGenesisBlockValid_PreviousHash(t *testing.T) {
 	// create testing block and brake it
 	block := GenesisBlock()
-	block.PreviousHash = "asdasd"
+	block.PreviousHash = "invalid has"
 
 	// validate block
 	result := isGenesisBlockValid(block)
