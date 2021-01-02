@@ -19,7 +19,7 @@ func (transaction *Transaction) Sign(privateKey string) (string, error) {
 	// try to decode private key
 	pemBlock, _ := pem.Decode([]byte(privateKey))
 	if pemBlock == nil {
-		panic("Cant decode private key.")
+		return "", nil
 	}
 	// try to parse private key
 	parsedPrivateKey, parseError := x509.ParsePKCS1PrivateKey(pemBlock.Bytes)

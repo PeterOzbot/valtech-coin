@@ -35,10 +35,10 @@ func Test_Sign_Correct(t *testing.T) {
 	}
 
 	// sign
-	result, _ := transaction.Sign(privateKey)
+	result, _ := transaction.Sign(testPrivateKey)
 
 	// check if encrypted result can be decrypted
-	pemBlock, _ := pem.Decode([]byte(publicKey))
+	pemBlock, _ := pem.Decode([]byte(testPublicKey))
 	pub, err := x509.ParsePKIXPublicKey(pemBlock.Bytes)
 	if err != nil {
 		log.Fatal(err)

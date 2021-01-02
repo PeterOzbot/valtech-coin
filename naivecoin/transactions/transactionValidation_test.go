@@ -57,7 +57,7 @@ func Test_Validate_UnspentOutputsAmountEqualsTransactionOutputs(t *testing.T) {
 		{
 			OutputID:    "OutputID",
 			OutputIndex: 5,
-			Address:     publicKey,
+			Address:     testPublicKey,
 			Amount:      15,
 		},
 	}
@@ -81,7 +81,7 @@ func Test_Validate_UnspentTransactionOutputDoesNotExists(t *testing.T) {
 			{
 				OutputID:    "OutputID",
 				OutputIndex: 5,
-				Signature:   "",
+				Signature:   "81c09a6c14a4481758da7f14f4743ad3a49f8be4b6fb8296e173a6bc3e887308c8b30e2a481f8712a7ac84974bf79c0c902f06e44d3673b52dabc17f45849d46e028f21a0c4a5da5d9a01b9b9647ead8e583a1f016addc190c1fce7f060833d212081555a203bbe7c8b2b2115c21807d615bf149aecf2a445a6a00590739c59abeb157269460f688677b74a6b55ac1523d9aa73915e7d4f82978c3e574c5058c4db22c15b4ceb5512a6acf249807568ec31d64d02dc11217829a5a1b776c25668158af5659305677a5e6a2338aabb6e47d6381d358445807ea307c59cf7d1a9ff2ce60e3514e8491b073c9042d95302f7b8f912fc9b9ee0680105f851a3454aece9c353a759b85687b0589551e37efac25b376bc2ed4c9d92d239e109dd736b667e0020cb4a8b9ae7e4e3ad94c1fe6b1a4a2f6076b8d0f4b7bc4b5b64e802b59860306adfb66820193b156f6d5a6c70c34cb8636cb200f0e086a09a49ee1bb98de23a5a138f48b946f5cc60f1354c81766e30c5a0859a35462470e4cb80e5d5b856e91a99ebeebb92756dc801eaabdbaf5efe2d1ee03ba39f1dfd784abd968009580aa841238c4fd48e21cf1a118b9ffc2bdb8405de601fdc84444badd3471ba3ac34e06fc3ae30c2e1fa15d9501eee5cc81850cffdf24b7ccfd2f4d7fa1d1cf627074ef98fcd986383afd657f5f1c09803bc9fc12dfba7e4180f5f3acb1aded",
 			},
 			// this input does not have unspent output so the validation should fail
 			{
@@ -101,7 +101,7 @@ func Test_Validate_UnspentTransactionOutputDoesNotExists(t *testing.T) {
 		{
 			OutputID:    "OutputID",
 			OutputIndex: 5,
-			Address:     "address",
+			Address:     testPublicKey,
 			Amount:      100,
 		},
 	}
@@ -139,7 +139,7 @@ func Test_Validate_UnspentTransactionOutputAddressMatchesSignature(t *testing.T)
 		{
 			OutputID:    "OutputID",
 			OutputIndex: 5,
-			Address:     publicKey,
+			Address:     testPublicKey,
 			Amount:      100,
 		},
 	}
@@ -177,7 +177,7 @@ func Test_Validate_IsValid(t *testing.T) {
 		{
 			OutputID:    "OutputID",
 			OutputIndex: 5,
-			Address:     publicKey,
+			Address:     testPublicKey,
 			Amount:      100,
 		},
 	}

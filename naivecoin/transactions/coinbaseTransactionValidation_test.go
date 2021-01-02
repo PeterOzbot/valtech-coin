@@ -22,23 +22,22 @@ func Test_IsValidCoinbase_ID(t *testing.T) {
 
 	// create inputs
 	var transaction = &Transaction{
-		ID: "invalid-ID",
+		ID: "invalid-id",
 		Inputs: []*TransactionInput{
 			{
-				OutputID:    "OutputID",
-				OutputIndex: 0,
+				OutputID:    "OutputID-1",
+				OutputIndex: 23,
 				Signature:   "",
 			},
 		},
 		Outputs: []*TransactionOutput{
 			{
-				Address: "address",
-				Amount:  10,
+				Address: "address1",
+				Amount:  50,
 			},
 		},
 	}
-	var blockIndex = 0
-
+	var blockIndex = 23
 	// validate
 	result := transaction.IsValidCoinbase(blockIndex)
 
@@ -53,22 +52,27 @@ func Test_IsValidCoinbase_TransactionInputCount(t *testing.T) {
 
 	// create inputs
 	var transaction = &Transaction{
-		ID: "bcad4f2936bbc94f0632fdf586a54d1fbb0f719bf6d1c4d2bd3021b6b485fc43",
+		ID: "f706c17df1e2ef4e8ac4e2e27f6da52d009fa65b67b6f19a41a1de0cab8b7390",
 		Inputs: []*TransactionInput{
 			{
 				OutputID:    "OutputID-1",
-				OutputIndex: 0,
+				OutputIndex: 23,
 				Signature:   "",
 			},
 			{
-				OutputID:    "OutputID-2",
-				OutputIndex: 1,
+				OutputID:    "OutputID-1",
+				OutputIndex: 23,
 				Signature:   "",
 			},
 		},
-		Outputs: []*TransactionOutput{},
+		Outputs: []*TransactionOutput{
+			{
+				Address: "address1",
+				Amount:  50,
+			},
+		},
 	}
-	var blockIndex = 0
+	var blockIndex = 23
 
 	// validate
 	result := transaction.IsValidCoinbase(blockIndex)
@@ -84,15 +88,20 @@ func Test_IsValidCoinbase_TransactionInput(t *testing.T) {
 
 	// create inputs
 	var transaction = &Transaction{
-		ID: "d3ba8a701c8982d18fa6d878a50cd7241234d10299797a098b4cf77bff668257",
+		ID: "37925c37799dce925533cdc785d08e4eaded9c0ee9df52dfcdb388c4b908cc2a",
 		Inputs: []*TransactionInput{
 			{
 				OutputID:    "OutputID-1",
-				OutputIndex: 5,
+				OutputIndex: 4,
 				Signature:   "",
 			},
 		},
-		Outputs: []*TransactionOutput{},
+		Outputs: []*TransactionOutput{
+			{
+				Address: "address1",
+				Amount:  50,
+			},
+		},
 	}
 	var blockIndex = 23
 
@@ -110,26 +119,26 @@ func Test_IsValidCoinbase_TransactionOutputCount(t *testing.T) {
 
 	// create inputs
 	var transaction = &Transaction{
-		ID: "41c149542b19739a94dd4528918c4f1a9e6901a402ae94d14e2c3b2dc4bea866",
+		ID: "322ba82b33d3eaef2be54f97f8696c299ca1494fe2c797523660a18e786cdb4c",
 		Inputs: []*TransactionInput{
 			{
 				OutputID:    "OutputID-1",
-				OutputIndex: 0,
+				OutputIndex: 23,
 				Signature:   "",
 			},
 		},
 		Outputs: []*TransactionOutput{
 			{
 				Address: "address1",
-				Amount:  10,
+				Amount:  50,
 			},
 			{
-				Address: "address2",
-				Amount:  20,
+				Address: "address1",
+				Amount:  50,
 			},
 		},
 	}
-	var blockIndex = 0
+	var blockIndex = 23
 
 	// validate
 	result := transaction.IsValidCoinbase(blockIndex)

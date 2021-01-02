@@ -17,6 +17,7 @@ func InitializeNode() {
 			return
 		}
 
+		// send messages to peer if there are any
 		if len(responseMessage) > 0 {
 			socketInfo.SendMessage(responseMessage)
 		}

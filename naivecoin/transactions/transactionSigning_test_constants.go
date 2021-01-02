@@ -1,7 +1,7 @@
 package transactions
 
 // private/public key used for testing
-var privateKey = `-----BEGIN RSA PRIVATE KEY-----
+var testPrivateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIJKAIBAAKCAgEAhAeIc5VZRD0Ef0u9KtyLJtMujPGL4v8kyDlZdQ4tnhQLaU7y
 aQREQvckzF2bOtj0pY7oWYQopnW+jpSGsif6ckNk6A6Lcw+wUY2JfuFsOnb3NAm7
 S48ZIg0owryZdk1NvV2LiApXNALRd5EZwhp4aVrFRFVv2g+hgmHaJBuzujAyc7QH
@@ -52,7 +52,7 @@ P/A64ihEAteIHvBmv/PqyjX0vEKdixjUAb79AnbmeHc9D9mvYKxvR9CCJVDgrwb0
 1UgBvARScUXpTtFWyBpqtyJ+aswLI7KgcW34taA71YaRpG34WcIcOf7PM1yxeLeK
 FRkKRWYOBa6JRijOUQitoXB63GYkG0U/w7h/EM+hnXtizgDKvib5KJEMWYk=
 -----END RSA PRIVATE KEY-----`
-var publicKey = `-----BEGIN PUBLIC KEY-----
+var testPublicKey = `-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAhAeIc5VZRD0Ef0u9KtyL
 JtMujPGL4v8kyDlZdQ4tnhQLaU7yaQREQvckzF2bOtj0pY7oWYQopnW+jpSGsif6
 ckNk6A6Lcw+wUY2JfuFsOnb3NAm7S48ZIg0owryZdk1NvV2LiApXNALRd5EZwhp4
