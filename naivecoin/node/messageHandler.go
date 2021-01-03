@@ -54,7 +54,7 @@ func HandleMessage(message string) (string, error) {
 
 // the chain is requested
 func handleQueryBlockchain() (string, error) {
-	blockchain := blockchain.GetBlockchain()
+	blockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
 	serializedData, err := serialize(blockchain)
 	if err != nil {
 		return "", err
@@ -74,8 +74,8 @@ func handleResponseBlockchain(requestMessage *MessageData) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	SelectChain(newBlockChain)
-	return "", nil
+	err = SelectChain(newBlockChain)
+	return "", err
 }
 
 // new block is received
@@ -86,20 +86,20 @@ func handleResponseLatestBlock(requestMessage *MessageData) (string, error) {
 	}
 
 	// try to add new block and determine if sender's whole chain may be required
-	queryWholeChain := ReceivedBlock(newBlock)
-	if queryWholeChain {
+	queryWholeChain, err := ReceivedBlock(newBlock)
+	if queryWholeChain && err != nil {
 		message := &MessageData{
 			Type: QueryBlockchainType,
 		}
 
 		return serialize(message)
 	}
-	return "", nil
+	return "", err
 }
 
 // latest block was requested
 func handleQueryLatestBlock() (string, error) {
-	currentBlockchain := blockchain.GetBlockchain()
+	currentBlockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
 	latestBlock := currentBlockchain[len(currentBlockchain)-1]
 	serializedData, err := serialize(latestBlock)
 	if err != nil {

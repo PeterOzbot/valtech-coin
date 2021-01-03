@@ -10,7 +10,7 @@ func Test_GenesisBlock(t *testing.T) {
 	genesisBlock := GenesisBlock()
 
 	// block data
-	hash := genesisBlock.CalculateHash()
+	hash, _ := genesisBlock.CalculateHash()
 	previousHash := ""
 	index := 0
 

@@ -11,7 +11,7 @@ func Test_IsValidNewBlock_ValidatesNilNewBlock(t *testing.T) {
 	var latestBlock *Block = &Block{}
 
 	// validate block
-	result := IsValidNewBlock(nil, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(nil, latestBlock, time.Unix(int64(0), 0))
 
 	// result should be false as new block is missing
 	if result {
@@ -25,7 +25,7 @@ func Test_IsValidNewBlock_ValidatesNilLatestBlock(t *testing.T) {
 	var newBlock *Block = &Block{}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, nil, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, nil, time.Unix(int64(0), 0))
 
 	// result should be false as latest block is missing
 	if result {
@@ -38,21 +38,21 @@ func Test_IsValidNewBlock_ValidatesIndex(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        0,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    time.Unix(1588430083866862505, 0),
 		Hash:         "4dfce9398b1e7a7dda79ff524de9d44859479d0019d7101c81b0d61393cfc11d",
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
 
 	// result should be false as Index is not correct
 	if result {
@@ -65,21 +65,21 @@ func Test_IsValidNewBlock_ValidatesPreviousHash(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "---",
 		Timestamp:    time.Unix(1588430083866862505, 0),
 		Hash:         "4dfce9398b1e7a7dda79ff524de9d44859479d0019d7101c81b0d61393cfc11d",
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
 
 	// result should be false as PreviousHash is not correct
 	if result {
@@ -92,21 +92,21 @@ func Test_IsValidNewBlock_ValidatesHash(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    time.Unix(1588430083866862505, 0),
 		Hash:         "---",
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
 
 	// result should be false as Hash is not correct
 	if result {
@@ -119,23 +119,23 @@ func Test_IsValidNewBlock_ValidatesDifficulty(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    time.Unix(1588430083866862505, 0),
-		Hash:         "02a1357876740fe77e0a934badad846902cc2f6861c706e185b68f4250ae53e2",
+		Hash:         "fc1f17f211942842cae5b581b4db0fcbc917f6c1c9ecae4b7552225cac4651e8",
 		Difficulty:   6,
 		Nonce:        40,
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
 
 	// result should be false as Hash is not correct
 	if result {
@@ -150,7 +150,7 @@ func Test_IsValidNewBlock_ValidatesTimestampPreviousBlock(t *testing.T) {
 	var newBlockTimestamp = int64(1588430083866862505)
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    time.Unix(newBlockTimestamp, 0),
 		Hash:         "02a1357876740fe77e0a934badad846902cc2f6861c706e185b68f4250ae53e2",
@@ -159,14 +159,14 @@ func Test_IsValidNewBlock_ValidatesTimestampPreviousBlock(t *testing.T) {
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(newBlockTimestamp+61, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp, 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp, 0))
 
 	// result should be false as Hash is not correct
 	if result {
@@ -181,7 +181,7 @@ func Test_IsValidNewBlock_ValidatesTimestampCurrentTime(t *testing.T) {
 	var newBlockTimestamp = int64(1588430083866862505)
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    time.Unix(newBlockTimestamp, 0),
 		Hash:         "02a1357876740fe77e0a934badad846902cc2f6861c706e185b68f4250ae53e2",
@@ -190,14 +190,14 @@ func Test_IsValidNewBlock_ValidatesTimestampCurrentTime(t *testing.T) {
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp-61, 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp-61, 0))
 
 	// result should be false as Hash is not correct
 	if result {
@@ -212,23 +212,23 @@ func Test_IsValidNewBlock_ValidatesValidNewBlock(t *testing.T) {
 	// create example blocks
 	var newBlock *Block = &Block{
 		Index:        16,
-		Data:         "Najnovejši block je ta.",
+		Message:      "Najnovejši block je ta.",
 		PreviousHash: "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 		Timestamp:    currentTimestamp,
-		Hash:         "02a1357876740fe77e0a934badad846902cc2f6861c706e185b68f4250ae53e2",
+		Hash:         "0010d0af2526fbce2b6c23b434669748d6467d04bad4fa24cc303a18a77b41b1",
 		Difficulty:   5,
-		Nonce:        40,
+		Nonce:        150,
 	}
 	var latestBlock *Block = &Block{
 		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Hash:         "6086832ab82d2ec069001023957746a3648e791819fc407ed99859c2753f6beb",
 	}
 
 	// validate block
-	result := IsValidNewBlock(newBlock, latestBlock, currentTimestamp)
+	result, _ := IsValidNewBlock(newBlock, latestBlock, currentTimestamp)
 
 	// result should be true as the new block is valid
 	if !result {

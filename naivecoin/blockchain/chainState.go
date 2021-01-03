@@ -5,55 +5,54 @@ import (
 	"time"
 )
 
-//Blockchain : Current block chain.
-var currentBlockchain []*Block
+//CurrentBlockchain : Current block chain.
+var CurrentBlockchain []*Block
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
-func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool) {
+func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool, error) {
 	if newChain == nil {
-		return existingChain, false
+		return existingChain, false, nil
 	}
 	if existingChain == nil {
-		return newChain, true
+		return newChain, true, nil
 	}
 
 	// checks if chain is valid
-	if !IsValidChain(newChain, currentTimestamp) {
-		return existingChain, false
+	isValidChain, err := IsValidChain(newChain, currentTimestamp)
+	if !isValidChain || err != nil {
+		return existingChain, false, err
 	}
 
 	// check if new has larger accumulated difficulty
 	if !checkAccumulatedDifficulty(newChain, existingChain) {
-		return existingChain, false
+		return existingChain, false, nil
 	}
 
-	return newChain, true
+	return newChain, true, nil
 }
 
 // GetBlockchain : Returns current valid block chain.
-func GetBlockchain() []*Block {
-	if currentBlockchain == nil {
+func GetBlockchain(currentBlockchain []*Block) []*Block {
+	if currentBlockchain == nil || len(currentBlockchain) == 0 {
 		currentBlockchain = append(currentBlockchain, GenesisBlock())
 	}
 
 	return currentBlockchain
 }
 
-//SetBlockchain : sets block chain.
-func SetBlockchain(blockchain []*Block) {
-	currentBlockchain = blockchain
-}
-
 //AddBlockToChain : Adds block to the blockchain.
-func AddBlockToChain(latestBlock *Block, newBlock *Block, currentBlockchain []*Block, currentTimestamp time.Time) bool {
+func AddBlockToChain(latestBlock *Block, newBlock *Block, currentBlockchain []*Block, currentTimestamp time.Time) (bool, []*Block, error) {
 
-	// check if block is valid and if it is add it
-	if IsValidNewBlock(newBlock, latestBlock, currentTimestamp) {
-		SetBlockchain(append(currentBlockchain, newBlock))
-		return true
+	// check if block is valid
+	isValidNewBlock, err := IsValidNewBlock(newBlock, latestBlock, currentTimestamp)
+
+	// if it is valid add it
+	if isValidNewBlock && err == nil {
+		newBlockChain := append(currentBlockchain, newBlock)
+		return true, newBlockChain, nil
 	}
 
-	return false
+	return false, currentBlockchain, err
 }
 
 // returns true if new chain has larger accumulated difficulty

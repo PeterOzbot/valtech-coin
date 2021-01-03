@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"naivecoin/transactions"
 	"testing"
 	"time"
 )
@@ -49,18 +50,37 @@ func Test_isGenesisBlockValid_Hash(t *testing.T) {
 	}
 }
 
-//Test_isGenesisBlockValid_Data : Tests if the genesis block validation validates Data.
-func Test_isGenesisBlockValid_Data(t *testing.T) {
+//Test_isGenesisBlockValid_Message : Tests if the genesis block validation validates Message.
+func Test_isGenesisBlockValid_Message(t *testing.T) {
 	// create testing block and brake it
 	block := GenesisBlock()
-	block.Data = "invalid has"
+	block.Message = "invalid has"
 
 	// validate block
 	result := isGenesisBlockValid(block)
 
-	// result should be false as Data is incorrect
+	// result should be false as Message is incorrect
 	if result {
-		t.Errorf("block validation passed even if Data is not the same")
+		t.Errorf("block validation passed even if Message is not the same")
+	}
+}
+
+//Test_isGenesisBlockValid_Transactions : Tests if the genesis block validation validates Transactions .
+func Test_isGenesisBlockValid_Transactions(t *testing.T) {
+	// create testing block and brake it
+	block := GenesisBlock()
+	block.Transactions = []*transactions.Transaction{{
+		ID: "1",
+	}, {
+		ID: "2",
+	}}
+
+	// validate block
+	result := isGenesisBlockValid(block)
+
+	// result should be false as Transactions are incorrect
+	if result {
+		t.Errorf("block validation passed even if Transactions are not the same")
 	}
 }
 

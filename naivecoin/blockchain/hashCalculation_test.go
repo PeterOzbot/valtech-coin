@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"naivecoin/transactions"
 	"testing"
 	"time"
 )
@@ -12,7 +13,7 @@ func Test_CalculateHash_NilInput(t *testing.T) {
 	var block *Block
 
 	// hash block
-	result := block.CalculateHash()
+	result, _ := block.CalculateHash()
 
 	// result should be empty string
 	if len(result) != 0 {
@@ -25,8 +26,26 @@ func Test_CalculateHash_CorrectHash(t *testing.T) {
 
 	// create example block
 	var block *Block = &Block{
-		Index:        15,
-		Data:         "Dober dan gospod kamplan.",
+		Index: 15,
+		Transactions: []*transactions.Transaction{
+			{
+				ID: "transactionID",
+				Inputs: []*transactions.TransactionInput{
+					{
+						OutputID:    "output-ID",
+						OutputIndex: 1,
+						Signature:   "signature",
+					},
+				},
+				Outputs: []*transactions.TransactionOutput{
+					{
+						Address: "address",
+						Amount:  25,
+					},
+				},
+			},
+		},
+		Message:      "Dober dan gospod kamplan.",
 		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
 		Timestamp:    time.Unix(1588430083866862500, 0),
 		Difficulty:   5,
@@ -34,10 +53,10 @@ func Test_CalculateHash_CorrectHash(t *testing.T) {
 	}
 
 	//  is manually generated hash from block
-	expected := "d399b315465353ccf52ebe7b1cb6ac261368d300cddcd6de6f93dcac0190be20"
+	expected := "50d35d6ece26625cd28aa61cb8535ccd25097b7d1485f834e168045aca831309"
 
 	// hash block
-	result := block.CalculateHash()
+	result, _ := block.CalculateHash()
 
 	// result should be correct hash
 	if result != expected {
@@ -45,28 +64,28 @@ func Test_CalculateHash_CorrectHash(t *testing.T) {
 	}
 }
 
-// Test_MineBlock_MineBlock : Tests if hash is correctly mined.
-func Test_MineBlock_MineBlock(t *testing.T) {
-	var block = &Block{
-		Index:        0,
-		Hash:         "",
-		Data:         "my genesis block!!",
-		PreviousHash: "",
-		Timestamp:    time.Unix(1465154705, 0),
+// Test_CalculateHash_NoTransactions : Tests if hashing handles no transactions without failing.
+func Test_CalculateHash_NoTransactions(t *testing.T) {
+
+	// create example block
+	var block *Block = &Block{
+		Index:        15,
+		Transactions: []*transactions.Transaction{},
+		Message:      "Dober dan gospod kamplan.",
+		PreviousHash: "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
+		Timestamp:    time.Unix(1588430083866862500, 0),
 		Difficulty:   5,
-		Nonce:        0,
+		Nonce:        32,
 	}
+
+	//  is manually generated hash from block
+	expected := "73a20e74f447c0b2a1918284000605b645a911e667500d8eb42f1f874d0d7974"
 
 	// hash block
-	block.MineBlock()
+	result, _ := block.CalculateHash()
 
 	// result should be correct hash
-	expectedHash := "07cd44e61db86462cd7727374f59a5c6cbe02c896746b44322e195d1f88b10f2"
-	if block.Hash != expectedHash {
-		t.Errorf("mining result is incorrect, Actual: %s Expected: %s", block.Hash, expectedHash)
-	}
-	expectedNonce := 32
-	if block.Nonce != expectedNonce {
-		t.Errorf("mining result is incorrect, Actual: %d Expected: %d", block.Nonce, expectedNonce)
+	if result != expected {
+		t.Errorf("hashing result is incorrect, Actual: %s Expected: %s", result, expected)
 	}
 }

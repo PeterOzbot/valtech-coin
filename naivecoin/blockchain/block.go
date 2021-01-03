@@ -1,6 +1,9 @@
 package blockchain
 
-import "time"
+import (
+	"naivecoin/transactions"
+	"time"
+)
 
 //Block : Defines single block in the blockchain
 type Block struct {
@@ -8,7 +11,8 @@ type Block struct {
 	Hash         string
 	PreviousHash string
 	Timestamp    time.Time
-	Data         string
+	Transactions []*transactions.Transaction
+	Message      string
 	Difficulty   int
 	Nonce        int
 }

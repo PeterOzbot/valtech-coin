@@ -1,32 +1,5 @@
 package blockchain
 
-import (
-	"time"
-)
-
-//GenerateBlock : Generates new block from data and latest block in the block chain.
-func GenerateBlock(blockData string, latestBlock *Block, currentTimestamp time.Time, difficulty int) *Block {
-	if latestBlock == nil {
-		return nil
-	}
-
-	// create new block without its hash
-	var newBlock = &Block{
-		Index:        latestBlock.Index + 1,
-		PreviousHash: latestBlock.Hash,
-		Timestamp:    currentTimestamp,
-		Data:         blockData,
-		Difficulty:   difficulty,
-		Nonce:        0,
-	}
-
-	// calculate block hash
-	newBlock.Hash = newBlock.CalculateHash()
-
-	// return creates block
-	return newBlock
-}
-
 //GetDifficulty : Determines the correct difficulty for next block.
 //difficulty increses if difference in timestamp between latest and adjusted block is less than half of expected
 //difficulty decreases if difference in timestamp between latest and adjusted block is more than double of expected

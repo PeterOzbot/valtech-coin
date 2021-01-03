@@ -1,6 +1,9 @@
 package node
 
+import "naivecoin/transactions"
+
 //BlockData : Defines data sent for block mining.
 type BlockData struct {
-	Data string `json:"data" binding:"required"`
+	Message      string                      `json:"message" binding:"required"`
+	Transactions []*transactions.Transaction `json:"transactions" binding:"required"`
 }
