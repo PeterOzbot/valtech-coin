@@ -5,9 +5,6 @@ import (
 	"time"
 )
 
-//CurrentBlockchain : Current block chain.
-var CurrentBlockchain []*Block
-
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
 func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool, error) {
 	if newChain == nil {

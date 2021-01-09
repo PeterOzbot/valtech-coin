@@ -1,6 +1,6 @@
 package transactions
 
-//FindUnspentTransactionOutput : Locates unspent transaction output that matches to transaction input.
+//FindUnspentTransactionOutput : Locates unspent transaction output that matches to the transaction input.
 func FindUnspentTransactionOutput(unspentTransactionOutputs []*UnspentTransactionOutput, transactionInput *TransactionInput) *UnspentTransactionOutput {
 	if transactionInput == nil {
 		return nil

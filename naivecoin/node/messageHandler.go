@@ -54,7 +54,7 @@ func HandleMessage(message string) (string, error) {
 
 // the chain is requested
 func handleQueryBlockchain() (string, error) {
-	blockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	blockchain := blockchain.GetBlockchain(CurrentBlockchain)
 	serializedData, err := serialize(blockchain)
 	if err != nil {
 		return "", err
@@ -99,7 +99,7 @@ func handleResponseLatestBlock(requestMessage *MessageData) (string, error) {
 
 // latest block was requested
 func handleQueryLatestBlock() (string, error) {
-	currentBlockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	currentBlockchain := blockchain.GetBlockchain(CurrentBlockchain)
 	latestBlock := currentBlockchain[len(currentBlockchain)-1]
 	serializedData, err := serialize(latestBlock)
 	if err != nil {

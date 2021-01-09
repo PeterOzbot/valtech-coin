@@ -1,8 +1,5 @@
 package transactions
 
-// UnspentTransactionOutputs : Collection of current unspent transaction outputs
-var UnspentTransactionOutputs []*UnspentTransactionOutput
-
 // UpdateUnspentTransactionOutputs : Processes new transactions and generates new unspent transactions.
 func UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput) []*UnspentTransactionOutput {
 

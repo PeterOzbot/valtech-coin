@@ -25,7 +25,9 @@ func main() {
 	initP2P(router)
 
 	// initialize this node
-	node.InitializeNode()
+	if !node.InitializeNode() {
+		return
+	}
 
 	// run
 	router.Run(fmt.Sprintf(":%s", *port))

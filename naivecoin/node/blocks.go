@@ -12,7 +12,7 @@ import (
 
 //GetBlockchain : Loads current block chain and serializes it to the context which is returned to the client.
 func GetBlockchain(c *gin.Context) {
-	currentBlockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	currentBlockchain := blockchain.GetBlockchain(CurrentBlockchain)
 	c.JSON(200, currentBlockchain)
 }
 
@@ -52,7 +52,7 @@ func Mineblocks(c *gin.Context) {
 //SelectChain :  Used to select new chain when received from other node.
 func SelectChain(newBlockchain []*blockchain.Block) error {
 	// get current block chain
-	currentBlockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	currentBlockchain := blockchain.GetBlockchain(CurrentBlockchain)
 
 	// get current time
 	var currentTimestamp = time.Now()
@@ -64,12 +64,12 @@ func SelectChain(newBlockchain []*blockchain.Block) error {
 	if err == nil {
 
 		// set new chain, selectedChain will be the chain that was selected
-		blockchain.CurrentBlockchain = selectedChain
+		CurrentBlockchain = selectedChain
 
 		// if new chain was selected notify peers
 		if newChainWasSelected {
 			// get latest block and notify peers
-			latestBlock := blockchain.CurrentBlockchain[len(currentBlockchain)-1]
+			latestBlock := CurrentBlockchain[len(currentBlockchain)-1]
 			notifyPeers(latestBlock)
 		}
 	}
@@ -81,7 +81,7 @@ func SelectChain(newBlockchain []*blockchain.Block) error {
 // if the whole chain must be queried then the result is true
 func ReceivedBlock(newBlock *blockchain.Block) (bool, error) {
 	// get this node's latest block
-	currentBlockchain := blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	currentBlockchain := blockchain.GetBlockchain(CurrentBlockchain)
 	latestBlock := currentBlockchain[len(currentBlockchain)-1]
 
 	// get current timestamp
@@ -93,7 +93,7 @@ func ReceivedBlock(newBlock *blockchain.Block) (bool, error) {
 
 		// if new block is not added and its index is greater then this node's latest block, the whole chain may be stale
 		var blockAddedToChain bool
-		blockAddedToChain, blockchain.CurrentBlockchain, err = blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp)
+		blockAddedToChain, CurrentBlockchain, err = blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp)
 		if blockAddedToChain && err != nil {
 
 			// new block was added notify peers
@@ -111,7 +111,7 @@ func ReceivedBlock(newBlock *blockchain.Block) (bool, error) {
 //generates/mines new block and adds it to the internal blockchain
 func generateNewBlock(blockData *BlockData) (*blockchain.Block, bool, error) {
 	// get current block chain
-	var currentBlockchain = blockchain.GetBlockchain(blockchain.CurrentBlockchain)
+	var currentBlockchain = blockchain.GetBlockchain(CurrentBlockchain)
 	var latestBlock = currentBlockchain[len(currentBlockchain)-1]
 
 	// determine current difficulty
@@ -138,7 +138,7 @@ func generateNewBlock(blockData *BlockData) (*blockchain.Block, bool, error) {
 
 		// add new block
 		var blockAddedToChain bool
-		blockAddedToChain, blockchain.CurrentBlockchain, err = blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp)
+		blockAddedToChain, CurrentBlockchain, err = blockchain.AddBlockToChain(latestBlock, newBlock, currentBlockchain, currentTimestamp)
 
 		// return generated and mined block
 		return newBlock, blockAddedToChain, err
