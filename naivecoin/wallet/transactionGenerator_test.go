@@ -31,6 +31,50 @@ func Test_GenerateTransaction_OwnerAddresNil(t *testing.T) {
 	}
 }
 
+// Test_GenerateTransaction_ZeroAmount : Tests that empty transaction is generated when there is no amount.
+func Test_GenerateTransaction_ZeroAmount(t *testing.T) {
+	// inputs
+	var receiverAddress = "receiver address"
+	var ownerAddress = &Address{
+		PublicKey:  testPublicKey,
+		PrivateKey: testPrivateKey,
+	}
+	var amount = 0.0
+	var unspentTransactionOutputs = []*transactions.UnspentTransactionOutput{
+		{
+			OutputID:    "1",
+			OutputIndex: 1,
+			Address:     "address",
+			Amount:      2.5,
+		},
+	}
+
+	// expected result
+	expectedTransaction := &transactions.Transaction{
+		ID:      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		Inputs:  []*transactions.TransactionInput{},
+		Outputs: []*transactions.TransactionOutput{},
+	}
+
+	// get transaction
+	actualTransaction, _ := GenerateTransaction(receiverAddress, ownerAddress, amount, unspentTransactionOutputs)
+
+	// check result
+	if actualTransaction == nil {
+		t.Errorf("generated transaction should not be nil")
+		return
+	}
+
+	// check Inputs length
+	if len(actualTransaction.Inputs) != len(expectedTransaction.Inputs) {
+		t.Errorf("generated transaction Inputs length not correct. Expected: %d Actual: %d", len(expectedTransaction.Inputs), len(actualTransaction.Inputs))
+	}
+	// check Outputs length
+	if len(actualTransaction.Outputs) != len(expectedTransaction.Outputs) {
+		t.Errorf("generated transaction Outputs length not correct. Expected: %d Actual: %d", len(expectedTransaction.Inputs), len(actualTransaction.Inputs))
+	}
+}
+
 // Test_GenerateTransaction_NotEnoughAmount : Test if nil is returned when there is not enough amount in the unspent outputs.
 func Test_GenerateTransaction_NotEnoughAmount(t *testing.T) {
 	// inputs

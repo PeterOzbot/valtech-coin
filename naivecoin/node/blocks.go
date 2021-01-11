@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"naivecoin/blockchain"
 	"naivecoin/p2p"
+	"naivecoin/transactions"
+	"naivecoin/wallet"
 	"net/http"
 	"time"
 
@@ -16,8 +18,8 @@ func GetBlockchain(c *gin.Context) {
 	c.JSON(200, currentBlockchain)
 }
 
-//Mineblocks : Generates next block.
-func Mineblocks(c *gin.Context) {
+//MineBlock : Generates next block.
+func MineBlock(c *gin.Context) {
 	// deserialize block data from body
 	var blockData *BlockData = &BlockData{}
 	if err := c.ShouldBindJSON(blockData); err != nil {
@@ -120,12 +122,18 @@ func generateNewBlock(blockData *BlockData) (*blockchain.Block, bool, error) {
 	// current time
 	var currentTimestamp = time.Now()
 
+	// generate transaction
+	transaction, transactionErr := wallet.GenerateTransaction(*blockData.Address, Wallet, *blockData.Amount, UnspentTransactionOutputs)
+	if transactionErr != nil {
+		return nil, false, transactionErr
+	}
+
 	// create new block
 	var newBlock = &blockchain.Block{
 		Index:        latestBlock.Index + 1,
 		PreviousHash: latestBlock.Hash,
 		Timestamp:    currentTimestamp,
-		Transactions: blockData.Transactions,
+		Transactions: []*transactions.Transaction{transaction},
 		Message:      blockData.Message,
 		Difficulty:   difficulty,
 	}

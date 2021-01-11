@@ -23,32 +23,10 @@ func GenerateTransaction(receiverAddress string, ownerAddress *Address, amount f
 	}
 
 	// create new inputs from selected unspent outputs
-	newInputs := make([]*transactions.TransactionInput, len(selectedUnspentOutputs))
-	for index, selectedOutput := range selectedUnspentOutputs {
-		newInputs[index] = &transactions.TransactionInput{
-			OutputID:    selectedOutput.OutputID,
-			OutputIndex: selectedOutput.OutputIndex,
-		}
-	}
+	newInputs := createInputs(selectedUnspentOutputs)
 
 	// create new outputs
-	var newOutputs []*transactions.TransactionOutput
-
-	// create receiver output
-	receiverOutput := &transactions.TransactionOutput{
-		Address: receiverAddress,
-		Amount:  amount,
-	}
-	// if there is some leftover amount then we need to create another output to transfer amount back to owner
-	if leftoverAmount != 0 {
-		ownerOutput := &transactions.TransactionOutput{
-			Address: ownerAddress.PublicKey,
-			Amount:  leftoverAmount,
-		}
-		newOutputs = []*transactions.TransactionOutput{receiverOutput, ownerOutput}
-	} else {
-		newOutputs = []*transactions.TransactionOutput{receiverOutput}
-	}
+	newOutputs := createOutputs(receiverAddress, ownerAddress, amount, leftoverAmount)
 
 	// create transaction
 	newTransaction := &transactions.Transaction{
@@ -81,6 +59,55 @@ func GenerateTransaction(receiverAddress string, ownerAddress *Address, amount f
 
 	// return new transation
 	return newTransaction, nil
+}
+
+// creates outputs for receiver and for owner too if there is any left-over amount
+func createOutputs(receiverAddress string, ownerAddress *Address, amount float64, leftoverAmount float64) []*transactions.TransactionOutput {
+	var newOutputs []*transactions.TransactionOutput
+
+	// create outputs if amount was more than zero
+	if amount > 0 {
+
+		// create receiver output
+		receiverOutput := &transactions.TransactionOutput{
+			Address: receiverAddress,
+			Amount:  amount,
+		}
+		// if there is some leftover amount then we need to create another output to transfer amount back to owner
+		if leftoverAmount != 0 {
+			ownerOutput := &transactions.TransactionOutput{
+				Address: ownerAddress.PublicKey,
+				Amount:  leftoverAmount,
+			}
+			newOutputs = []*transactions.TransactionOutput{receiverOutput, ownerOutput}
+		} else {
+			newOutputs = []*transactions.TransactionOutput{receiverOutput}
+		}
+	}
+
+	// return create outputs
+	return newOutputs
+}
+
+// create inputs from unspent outputs
+func createInputs(selectedUnspentOutputs []*transactions.UnspentTransactionOutput) []*transactions.TransactionInput {
+	var newInputs []*transactions.TransactionInput
+
+	// create new inputs from selected unspent outputs
+	selectedUnspentOutputsLen := len(selectedUnspentOutputs)
+
+	// create inputs if there is any unspent outputs
+	if selectedUnspentOutputsLen > 0 {
+		newInputs = make([]*transactions.TransactionInput, selectedUnspentOutputsLen)
+		for index, selectedOutput := range selectedUnspentOutputs {
+			newInputs[index] = &transactions.TransactionInput{
+				OutputID:    selectedOutput.OutputID,
+				OutputIndex: selectedOutput.OutputIndex,
+			}
+		}
+	}
+
+	return newInputs
 }
 
 // validate the amount from selected outputs

@@ -5,13 +5,10 @@ import (
 	"io/ioutil"
 	"naivecoin/p2p"
 	"naivecoin/wallet"
-	"os"
-
-	"github.com/beevik/guid"
 )
 
 //InitializeNode : Hooks nethods from p2p to handle comunication between peers.
-func InitializeNode() bool {
+func InitializeNode(nodeName string) bool {
 
 	// Handles message when its received from peers.
 	p2p.OnMessageReceived = func(requestMessage string, socketInfo *p2p.SocketInfo) {
@@ -42,18 +39,18 @@ func InitializeNode() bool {
 
 	// generate new wallet and save it
 	var err error = nil
-	WalletAddress, err = wallet.GenerateAddress()
+	Wallet, err = wallet.GenerateAddress()
 	if err != nil {
 		fmt.Println("Generating wallet failed : ", err)
 		return false
 	}
-	serializedWallet, err := serialize(WalletAddress)
+	serializedWallet, err := serialize(Wallet)
 	if err != nil {
 		fmt.Println("Serializing wallet failed : ", err)
 		return false
 	}
-	fileName := fmt.Sprintf("%s.json", guid.New().String())
-	err = ioutil.WriteFile(fileName, []byte(serializedWallet), os.ModeAppend)
+	fileName := fmt.Sprintf("%s.json", nodeName)
+	err = ioutil.WriteFile(fileName, []byte(serializedWallet), 0664)
 	if err != nil {
 		fmt.Println("Serializing wallet failed : ", err)
 		return false

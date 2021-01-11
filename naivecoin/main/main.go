@@ -25,7 +25,7 @@ func main() {
 	initP2P(router)
 
 	// initialize this node
-	if !node.InitializeNode() {
+	if !node.InitializeNode(*port) {
 		return
 	}
 
@@ -37,7 +37,7 @@ func initHTTP(router *gin.Engine) {
 
 	// set the routs
 	router.GET("/blocks", node.GetBlockchain)
-	router.POST("/mineblock", node.Mineblocks)
+	router.POST("/mineblock", node.MineBlock)
 	router.GET("/peers", p2p.GetPeers)
 	router.POST("/addPeer", p2p.AddPeer)
 }
