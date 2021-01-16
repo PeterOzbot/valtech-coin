@@ -40,20 +40,32 @@ func InitializePeer(callerID string, conn *websocket.Conn) (*SocketInfo, bool) {
 		OnMessageReceived(requestMessage, socketInfo)
 	}
 
-	// reading messages from other peers
 	go func() {
+
+		// wait for incoming message
 		for {
+
+			// reading messages
 			_, msg, err := conn.ReadMessage()
 			if err != nil {
-				fmt.Println("Failed to read message: ", err)
+				fmt.Println("Failed to read message or peer disconnected: ", err)
 				break
 			}
+
+			// notify message received
 			if socketInfo.OnMessageReceived != nil {
 				socketInfo.OnMessageReceived(string(msg))
 			}
 		}
 
-		conn.Close()
+		// remove peer
+		RemovePeer(callerID)
+
+		// close connection
+		err := conn.Close()
+		if err != nil {
+			fmt.Println("Failed closing connection: ", err)
+		}
 	}()
 
 	return socketInfo, false

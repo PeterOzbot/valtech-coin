@@ -1,6 +1,10 @@
 package p2p
 
-import "github.com/beevik/guid"
+import (
+	"sync"
+
+	"github.com/beevik/guid"
+)
 
 //Peers : Current peers connected to this one.
 var Peers []*SocketInfo
@@ -9,3 +13,6 @@ var Peers []*SocketInfo
 var Identifier *PeerIdentifier = &PeerIdentifier{
 	ID: guid.New().String(),
 }
+
+//PeerLock : Used to make chainging peer state thread safe.
+var peerLock sync.Mutex
