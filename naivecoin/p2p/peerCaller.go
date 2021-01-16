@@ -29,42 +29,7 @@ func TryInitializeCallerPeer(peerData *PeerData) (*SocketInfo, bool) {
 
 	// get caller id
 	callerID := response.Header.Get(IdentifierHeader)
-	if doesPeerExists(callerID) {
-		conn.Close()
-		return nil, true
-	}
 
-	// create new info
-	socketInfo := &SocketInfo{
-		Connection: conn,
-		ID:         callerID,
-	}
-
-	// hook send message
-	socketInfo.SendMessage = func(message string) {
-		err = conn.WriteMessage(websocket.TextMessage, []byte(message))
-		if err != nil {
-			fmt.Println("send message : ", err)
-		}
-	}
-
-	// hook on message received
-	socketInfo.OnMessageReceived = func(requestMessage string) {
-		OnMessageReceived(requestMessage, socketInfo)
-	}
-
-	go func() {
-		for {
-			_, message, err := conn.ReadMessage()
-			if err != nil {
-				fmt.Println("error reading: ", err)
-				break
-			}
-			if socketInfo.OnMessageReceived != nil {
-				socketInfo.OnMessageReceived(string(message))
-			}
-		}
-	}()
-
-	return socketInfo, false
+	// common initialization
+	return InitializePeer(callerID, conn)
 }

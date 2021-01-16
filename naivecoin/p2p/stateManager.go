@@ -7,12 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var peers []*SocketInfo
-
 //GetPeers : Returns all connected peers.
 func GetPeers(c *gin.Context) {
 	var friendlyPeers []*PeerData
-	for _, peer := range peers {
+	for _, peer := range Peers {
 		friendlyPeers = append(friendlyPeers, &PeerData{
 			Address: peer.Connection.RemoteAddr().String(),
 		})
@@ -45,7 +43,7 @@ func AddPeer(c *gin.Context) {
 		if peer != nil {
 
 			// add to list
-			peers = append(peers, peer)
+			Peers = append(Peers, peer)
 
 			// peer connected
 			OnPeerConnected(peer)
@@ -74,7 +72,7 @@ func AddServerPeer(c *gin.Context) {
 		if peer != nil {
 
 			// add to list
-			peers = append(peers, peer)
+			Peers = append(Peers, peer)
 
 			// peer connected
 			OnPeerConnected(peer)
@@ -89,20 +87,9 @@ func AddServerPeer(c *gin.Context) {
 	}
 }
 
-//doesPeerExists : return if peer is already connected
-func doesPeerExists(id string) bool {
-	for _, peer := range peers {
-		if peer.ID == id {
-			return true
-		}
-	}
-
-	return false
-}
-
 //NotifyPeers : Notifies all peers with new message.
 func NotifyPeers(message string) {
-	for _, peer := range peers {
+	for _, peer := range Peers {
 		peer.SendMessage(message)
 	}
 }
