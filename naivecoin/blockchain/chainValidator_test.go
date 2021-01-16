@@ -23,7 +23,7 @@ func Test_IsValidChain_Empty(t *testing.T) {
 	chain := make([]*Block, 0)
 
 	// validate block
-	result, _ := IsValidChain(chain, time.Unix(int64(0), 0))
+	result, _, _ := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be negative as the chain is empty
 	if result {
@@ -37,7 +37,7 @@ func Test_IsValidChain_Null(t *testing.T) {
 	var chain []*Block
 
 	// validate block
-	result, _ := IsValidChain(chain, time.Unix(int64(0), 0))
+	result, _, _ := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be negative as the chain is null
 	if result {
@@ -51,7 +51,7 @@ func Test_IsValidChain_GenesisBlock(t *testing.T) {
 	chain := prepareChain()
 
 	// validate block
-	result, _ := IsValidChain(chain, time.Unix(int64(0), 0))
+	result, _, _ := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be positive
 	if !result {
@@ -67,7 +67,7 @@ func Test_IsValidChain_InvalidGenesisBlock(t *testing.T) {
 	chain[0].Hash = "fake hash"
 
 	// validate block
-	result, _ := IsValidChain(chain, time.Unix(int64(0), 0))
+	result, _, _ := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be false as the genesis block is not valid
 	if result {
@@ -92,7 +92,7 @@ func Test_IsValidChain_SecondBlock(t *testing.T) {
 	chain = append(chain, secondBlock)
 
 	// validate block
-	result, _ := IsValidChain(chain, currentTimestamp)
+	result, _, _ := IsValidChain(chain, currentTimestamp)
 
 	// result should be positive
 	if !result {
@@ -125,10 +125,15 @@ func Test_IsValidChain_ThirdInvalidBlock(t *testing.T) {
 	chain = append(chain, thirdBlock)
 
 	// validate block
-	result, _ := IsValidChain(chain, time.Unix(int64(0), 0))
+	result, _, _ := IsValidChain(chain, time.Unix(int64(0), 0))
 
 	// result should be false
 	if result {
 		t.Errorf("chain validation succeeded even if the blocks are NOT valid")
 	}
+}
+
+//Test_IsValidChain_UnspentTransactionOutputs : Tests if the unspent transaction outputs are returned correctly.
+func Test_IsValidChain_UnspentTransactionOutputs(t *testing.T) {
+	t.Errorf("implement")
 }

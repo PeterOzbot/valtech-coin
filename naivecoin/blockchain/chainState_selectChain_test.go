@@ -12,7 +12,7 @@ func Test_SelectChain_NewChainNull(t *testing.T) {
 	existingChain := make([]*Block, 1)
 
 	// validate block
-	result, newSelected, _ := SelectChain(nil, existingChain, time.Unix(int64(0), 0))
+	result, newSelected, _, _ := SelectChain(nil, existingChain, time.Unix(int64(0), 0))
 
 	// result should not null as existing chain should be selected
 	if result == nil || cap(result) != 1 {
@@ -29,7 +29,7 @@ func Test_SelectChain_ExistingChainNull(t *testing.T) {
 	newChain := make([]*Block, 1)
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, nil, time.Unix(int64(0), 0))
+	result, newSelected, _, _ := SelectChain(newChain, nil, time.Unix(int64(0), 0))
 
 	// result should not null as new chain should be selected
 	if result == nil || cap(result) != 1 {
@@ -57,7 +57,7 @@ func Test_SelectChain_InvalidLonger(t *testing.T) {
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
+	result, newSelected, _, _ := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
 
 	// the selected chain should be existing which has length of 1
 	if result == nil || len(result) != 1 {
@@ -86,7 +86,7 @@ func Test_SelectChain_ValidShorter(t *testing.T) {
 	newChain := prepareChain()
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
+	result, newSelected, _, _ := SelectChain(newChain, existingChain, time.Unix(int64(0), 0))
 
 	// result should be existing chain with length of 2
 	if result == nil || len(result) != 2 {
@@ -117,7 +117,7 @@ func Test_SelectChain_ValidLonger(t *testing.T) {
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
+	result, newSelected, _, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
 
 	// result should be new chain with length of 2
 	if result == nil || len(result) != 2 {
@@ -148,7 +148,7 @@ func Test_SelectChain_AccumulatedDifficulty(t *testing.T) {
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
+	result, newSelected, _, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
 
 	// result should be existing chain with length of 1
 	if result == nil || len(result) != 1 {
@@ -179,7 +179,7 @@ func Test_SelectChain_AccumulatedDifficultyNew(t *testing.T) {
 	newChain = append(newChain, secondBlock)
 
 	// validate block
-	result, newSelected, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
+	result, newSelected, _, _ := SelectChain(newChain, existingChain, newChain[0].Timestamp)
 
 	// result should be new chain with length of 2
 	if result == nil || len(result) != 2 {
@@ -188,4 +188,9 @@ func Test_SelectChain_AccumulatedDifficultyNew(t *testing.T) {
 	if !newSelected {
 		t.Errorf("flag should indicate that new was selected")
 	}
+}
+
+//Test_SelectChain_UnspentTransactionOutputs : Tests that when new chain is selected the unspent transaction outputs are returned correctly.
+func Test_SelectChain_UnspentTransactionOutputs(t *testing.T) {
+	t.Errorf("implement")
 }

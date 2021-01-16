@@ -36,7 +36,8 @@ func main() {
 func initHTTP(router *gin.Engine) {
 
 	// set the routs
-	router.GET("/blocks", node.GetBlockchain)
+	router.GET("/blockchain", node.GetBlockchain)
+	router.GET("/unspentTransactionOutputs", node.GetUnspentTransactionOutputs)
 	router.POST("/mineblock", node.MineBlock)
 	router.GET("/peers", p2p.GetPeers)
 	router.POST("/addPeer", p2p.AddPeer)

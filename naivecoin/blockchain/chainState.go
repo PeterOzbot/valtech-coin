@@ -2,30 +2,31 @@ package blockchain
 
 import (
 	"math"
+	"naivecoin/transactions"
 	"time"
 )
 
 //SelectChain : Checks if new chain should be replaced with the existing one. The longest valid chain is always selected. Others are ignored.
-func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool, error) {
+func SelectChain(newChain []*Block, existingChain []*Block, currentTimestamp time.Time) ([]*Block, bool, []*transactions.UnspentTransactionOutput, error) {
 	if newChain == nil {
-		return existingChain, false, nil
+		return existingChain, false, []*transactions.UnspentTransactionOutput{}, nil
 	}
 	if existingChain == nil {
-		return newChain, true, nil
+		return newChain, true, []*transactions.UnspentTransactionOutput{}, nil
 	}
 
 	// checks if chain is valid
-	isValidChain, err := IsValidChain(newChain, currentTimestamp)
+	isValidChain, unspentTransactionOutputs, err := IsValidChain(newChain, currentTimestamp)
 	if !isValidChain || err != nil {
-		return existingChain, false, err
+		return existingChain, false, []*transactions.UnspentTransactionOutput{}, err
 	}
 
 	// check if new has larger accumulated difficulty
 	if !checkAccumulatedDifficulty(newChain, existingChain) {
-		return existingChain, false, nil
+		return existingChain, false, []*transactions.UnspentTransactionOutput{}, nil
 	}
 
-	return newChain, true, nil
+	return newChain, true, unspentTransactionOutputs, nil
 }
 
 // GetBlockchain : Returns current valid block chain.
@@ -35,21 +36,6 @@ func GetBlockchain(currentBlockchain []*Block) []*Block {
 	}
 
 	return currentBlockchain
-}
-
-//AddBlockToChain : Adds block to the blockchain.
-func AddBlockToChain(latestBlock *Block, newBlock *Block, currentBlockchain []*Block, currentTimestamp time.Time) (bool, []*Block, error) {
-
-	// check if block is valid
-	isValidNewBlock, err := IsValidNewBlock(newBlock, latestBlock, currentTimestamp)
-
-	// if it is valid add it
-	if isValidNewBlock && err == nil {
-		newBlockChain := append(currentBlockchain, newBlock)
-		return true, newBlockChain, nil
-	}
-
-	return false, currentBlockchain, err
 }
 
 // returns true if new chain has larger accumulated difficulty

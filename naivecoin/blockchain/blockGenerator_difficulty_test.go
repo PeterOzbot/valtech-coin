@@ -8,8 +8,8 @@ import (
 //Test_GetDifficulty_GenesisOnlyChain : Tests if correct difficulty is returned if only genesis block is in the blockchain.
 func Test_GetDifficulty_GenesisOnlyChain(t *testing.T) {
 	// intervals
-	blockGenerationInterval := 0
-	difficultyAdjustmentInterval := 0
+	blockGenerationInterval := 10
+	difficultyAdjustmentInterval := 1
 	// create genesis block
 	var genesisBlock = GenesisBlock()
 
@@ -249,5 +249,42 @@ func Test_GetDifficulty_NoChanges(t *testing.T) {
 	// difficulty should be the same as genesis
 	if difficulty != adjustedBlockDifficulty {
 		t.Errorf("Difficulty should stay the same")
+	}
+}
+
+//Test_GetDifficulty_DifficultyAdjustmentIntervalZero : Tests if difficulty increases if difficultyAdjustmentInterval is zero and adjusted block timestamp is ignored.
+func Test_GetDifficulty_DifficultyAdjustmentIntervalZero(t *testing.T) {
+	// intervals
+	blockGenerationInterval := 10
+	difficultyAdjustmentInterval := 0
+
+	// latest timestamp - should be less that two times blockGenerationInterval
+	latestTimestamp := int64((difficultyAdjustmentInterval * blockGenerationInterval))
+
+	// adjusted difficulty
+	adjustedBlockDifficulty := 1
+
+	// create genesis and adjusted block
+	var genesisBlock = GenesisBlock()
+	var adjustedBlock = &Block{
+		Index:      1,
+		Timestamp:  time.Unix(latestTimestamp, 0),
+		Difficulty: adjustedBlockDifficulty,
+	}
+	var latestBlock = &Block{
+		Index:      2,
+		Timestamp:  time.Unix(latestTimestamp, 0),
+		Difficulty: adjustedBlockDifficulty,
+	}
+
+	// create block chain
+	var currentBlockchain = []*Block{genesisBlock, adjustedBlock, latestBlock}
+
+	// get difficulty
+	var difficulty = GetDifficulty(latestBlock, currentBlockchain, blockGenerationInterval, difficultyAdjustmentInterval)
+
+	// difficulty should be increased
+	if difficulty <= adjustedBlockDifficulty {
+		t.Errorf("Difficulty(%d) should be more than adjusted block(%d).", difficulty, adjustedBlockDifficulty)
 	}
 }

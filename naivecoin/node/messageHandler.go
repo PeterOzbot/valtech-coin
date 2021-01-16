@@ -87,7 +87,7 @@ func handleResponseLatestBlock(requestMessage *MessageData) (string, error) {
 
 	// try to add new block and determine if sender's whole chain may be required
 	queryWholeChain, err := ReceivedBlock(newBlock)
-	if queryWholeChain && err != nil {
+	if queryWholeChain && err == nil {
 		message := &MessageData{
 			Type: QueryBlockchainType,
 		}

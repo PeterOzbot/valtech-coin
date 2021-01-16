@@ -11,7 +11,7 @@ func Test_IsValidNewBlock_ValidatesNilNewBlock(t *testing.T) {
 	var latestBlock *Block = &Block{}
 
 	// validate block
-	result, _ := IsValidNewBlock(nil, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(nil, latestBlock, time.Unix(int64(0), 0), nil)
 
 	// result should be false as new block is missing
 	if result {
@@ -25,7 +25,7 @@ func Test_IsValidNewBlock_ValidatesNilLatestBlock(t *testing.T) {
 	var newBlock *Block = &Block{}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, nil, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, nil, time.Unix(int64(0), 0), nil)
 
 	// result should be false as latest block is missing
 	if result {
@@ -52,7 +52,7 @@ func Test_IsValidNewBlock_ValidatesIndex(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0), nil)
 
 	// result should be false as Index is not correct
 	if result {
@@ -79,7 +79,7 @@ func Test_IsValidNewBlock_ValidatesPreviousHash(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0), nil)
 
 	// result should be false as PreviousHash is not correct
 	if result {
@@ -106,7 +106,7 @@ func Test_IsValidNewBlock_ValidatesHash(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0), nil)
 
 	// result should be false as Hash is not correct
 	if result {
@@ -135,7 +135,7 @@ func Test_IsValidNewBlock_ValidatesDifficulty(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(int64(0), 0), nil)
 
 	// result should be false as Hash is not correct
 	if result {
@@ -166,7 +166,7 @@ func Test_IsValidNewBlock_ValidatesTimestampPreviousBlock(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp, 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp, 0), nil)
 
 	// result should be false as Hash is not correct
 	if result {
@@ -197,7 +197,7 @@ func Test_IsValidNewBlock_ValidatesTimestampCurrentTime(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp-61, 0))
+	result, _ := IsValidNewBlock(newBlock, latestBlock, time.Unix(newBlockTimestamp-61, 0), nil)
 
 	// result should be false as Hash is not correct
 	if result {
@@ -228,7 +228,7 @@ func Test_IsValidNewBlock_ValidatesValidNewBlock(t *testing.T) {
 	}
 
 	// validate block
-	result, _ := IsValidNewBlock(newBlock, latestBlock, currentTimestamp)
+	result, _ := IsValidNewBlock(newBlock, latestBlock, currentTimestamp, nil)
 
 	// result should be true as the new block is valid
 	if !result {

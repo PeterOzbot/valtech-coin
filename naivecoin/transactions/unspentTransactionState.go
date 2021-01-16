@@ -3,6 +3,10 @@ package transactions
 // UpdateUnspentTransactionOutputs : Processes new transactions and generates new unspent transactions.
 func UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput) []*UnspentTransactionOutput {
 
+	// copy to array so we can modify elements without chaning input
+	workingUnspentOutputs := make([]*UnspentTransactionOutput, len(unspentTransactionOutputs))
+	copy(workingUnspentOutputs, unspentTransactionOutputs)
+
 	// define array of unspent transactions
 	var newUnspentTransactionOutputs []*UnspentTransactionOutput
 	// counter to remember how many unspent transaction outputs were removed
@@ -35,22 +39,22 @@ func UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTran
 		for _, input := range newTransaction.Inputs {
 
 			// if we already removed some we do not need to check them so we reduce the count with removedUnspentOutputsCount
-			unspentTransactionOutputCount := len(unspentTransactionOutputs) - removedUnspentOutputsCount
+			unspentTransactionOutputCount := len(workingUnspentOutputs) - removedUnspentOutputsCount
 
 			for unspentOutputIndex := 0; unspentOutputIndex < unspentTransactionOutputCount; unspentOutputIndex++ {
 				// get current output beeing checked
-				unspentOutput := unspentTransactionOutputs[unspentOutputIndex]
+				unspentOutput := workingUnspentOutputs[unspentOutputIndex]
 
 				// check if unspent transaction output matches transaction input and 'remove' it
 				if input.IsMatch(unspentOutput) {
 					// get the index of transaction to swap with
 					// if last was already swapped then the transaction to swap should be second to last
-					lastIndex := len(unspentTransactionOutputs) - 1 - removedUnspentOutputsCount
+					lastIndex := len(workingUnspentOutputs) - 1 - removedUnspentOutputsCount
 
 					// swap with last
-					unspentTransactionOutputs[unspentOutputIndex] = unspentTransactionOutputs[lastIndex]
+					workingUnspentOutputs[unspentOutputIndex] = workingUnspentOutputs[lastIndex]
 					// to prevent memory leak
-					unspentTransactionOutputs[lastIndex] = nil
+					workingUnspentOutputs[lastIndex] = nil
 
 					// decrease index to check swapped unspent transaction, next iteration we check the element which was swapped
 					unspentOutputIndex--
@@ -62,11 +66,11 @@ func UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTran
 	}
 
 	// slice removed out of the array
-	var lastRemovedIndex = len(unspentTransactionOutputs) - removedUnspentOutputsCount
+	var lastRemovedIndex = len(workingUnspentOutputs) - removedUnspentOutputsCount
 	if lastRemovedIndex > -1 {
-		unspentTransactionOutputs = unspentTransactionOutputs[:lastRemovedIndex]
+		workingUnspentOutputs = workingUnspentOutputs[:lastRemovedIndex]
 	}
 
 	// return combined constructed list
-	return append(newUnspentTransactionOutputs, unspentTransactionOutputs...)
+	return append(newUnspentTransactionOutputs, workingUnspentOutputs...)
 }
