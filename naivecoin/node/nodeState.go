@@ -21,3 +21,12 @@ var UnspentTransactionOutputs []*transactions.UnspentTransactionOutput = []*tran
 
 //Wallet : This node wallet.
 var Wallet *wallet.Address
+
+//UnspentTransactionManager : Logic for managing unspent transaction outputs.
+var UnspentTransactionManager = &transactions.UnspentTransactionManager{}
+
+//TransactionValidator : Logic for validating block transactions
+var TransactionValidator = &transactions.BlockTransactionValidator{}
+
+//ChainState : Logic for chain state handling.
+var ChainState = &blockchain.ChainState{TransactionValidator: TransactionValidator, ChainValidator: &blockchain.ChainValidator{TransactionValidator: TransactionValidator, UnspentTransactionManager: UnspentTransactionManager}}

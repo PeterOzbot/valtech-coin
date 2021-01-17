@@ -4,14 +4,14 @@ import "testing"
 
 // Test_ValidateBlockTransactions_EmptyTransaction : Tests validation when there are no transactions.
 func Test_ValidateBlockTransactions_EmptyTransaction(t *testing.T) {
-
+	var blockTransactionValidator = &BlockTransactionValidator{}
 	// create inputs transaction
 	var blockIndex = 12
 	var transactions = []*Transaction{}
 	var unspentTransactionOutputs = []*UnspentTransactionOutput{}
 
 	// create coinbase transaction
-	result, _ := ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
+	result, _ := blockTransactionValidator.ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
 
 	// validate expected
 	if result {
@@ -21,7 +21,7 @@ func Test_ValidateBlockTransactions_EmptyTransaction(t *testing.T) {
 
 // Test_ValidateBlockTransactions_Coinbase : Tests validation when fist transaction is not valid coinbase transaction.
 func Test_ValidateBlockTransactions_Coinbase(t *testing.T) {
-
+	var blockTransactionValidator = &BlockTransactionValidator{}
 	// create inputs transaction
 	var blockIndex = 12
 	var transactions = []*Transaction{
@@ -91,7 +91,7 @@ func Test_ValidateBlockTransactions_Coinbase(t *testing.T) {
 	}
 
 	// create coinbase transaction
-	result, _ := ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
+	result, _ := blockTransactionValidator.ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
 
 	// validate expected
 	if result {
@@ -101,7 +101,7 @@ func Test_ValidateBlockTransactions_Coinbase(t *testing.T) {
 
 // Test_ValidateBlockTransactions_Transactions : Tests validation when transactions are not valid.
 func Test_ValidateBlockTransactions_Transactions(t *testing.T) {
-
+	var blockTransactionValidator = &BlockTransactionValidator{}
 	// create inputs transaction
 	var blockIndex = 12
 	var transactions = []*Transaction{
@@ -171,7 +171,7 @@ func Test_ValidateBlockTransactions_Transactions(t *testing.T) {
 	}
 
 	// create coinbase transaction
-	result, _ := ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
+	result, _ := blockTransactionValidator.ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
 
 	// validate expected
 	if result {
@@ -181,7 +181,7 @@ func Test_ValidateBlockTransactions_Transactions(t *testing.T) {
 
 // Test_ValidateBlockTransactions_IsValid : Tests validation when transactions are valid.
 func Test_ValidateBlockTransactions_IsValid(t *testing.T) {
-
+	var blockTransactionValidator = &BlockTransactionValidator{}
 	// create inputs transaction
 	var blockIndex = 12
 	var transactions = []*Transaction{
@@ -251,7 +251,7 @@ func Test_ValidateBlockTransactions_IsValid(t *testing.T) {
 	}
 
 	// create coinbase transaction
-	result, _ := ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
+	result, _ := blockTransactionValidator.ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
 
 	// validate expected
 	if !result {

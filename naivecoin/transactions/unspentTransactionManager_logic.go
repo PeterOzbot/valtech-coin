@@ -1,7 +1,7 @@
 package transactions
 
 // UpdateUnspentTransactionOutputs : Processes new transactions and generates new unspent transactions.
-func UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput) []*UnspentTransactionOutput {
+func (unspentTransactionManager UnspentTransactionManager) UpdateUnspentTransactionOutputs(newTransactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput) []*UnspentTransactionOutput {
 
 	// copy to array so we can modify elements without chaning input
 	workingUnspentOutputs := make([]*UnspentTransactionOutput, len(unspentTransactionOutputs))

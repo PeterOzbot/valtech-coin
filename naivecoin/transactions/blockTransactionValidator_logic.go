@@ -1,7 +1,7 @@
 package transactions
 
 //ValidateBlockTransactions : Validates transactions that belong to a single block.
-func ValidateBlockTransactions(transactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput, blockIndex int) (bool, error) {
+func (blockTransactionValidator *BlockTransactionValidator) ValidateBlockTransactions(transactions []*Transaction, unspentTransactionOutputs []*UnspentTransactionOutput, blockIndex int) (bool, error) {
 
 	// if there are no transactions its not valid, there must be at least one
 	if len(transactions) < 1 {

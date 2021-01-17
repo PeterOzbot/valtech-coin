@@ -5,35 +5,30 @@ import (
 	"time"
 )
 
-//IsValidChain : Validates the whole block chain, including the first genesis block and all the rest.
-func IsValidChain(blockchain []*Block, currentTimestamp time.Time) (bool, []*transactions.UnspentTransactionOutput, error) {
-	if blockchain == nil || len(blockchain) == 0 {
-		return false, []*transactions.UnspentTransactionOutput{}, nil
-	}
+//IChainValidator : Defines interface for validating blockchain.
+type IChainValidator interface {
+	// Validates transactions that belong to a single block.
+	ValidateBlockTransactions(transactions []*transactions.Transaction, unspentTransactionOutputs []*transactions.UnspentTransactionOutput, blockIndex int) (bool, error)
 
-	// lets validate genesis block first
-	if !isGenesisBlockValid(blockchain[0]) {
-		return false, []*transactions.UnspentTransactionOutput{}, nil
-	}
+	//  Processes new transactions and generates new unspent transactions.
+	UpdateUnspentTransactionOutputs(newTransactions []*transactions.Transaction, unspentTransactionOutputs []*transactions.UnspentTransactionOutput) []*transactions.UnspentTransactionOutput
 
-	// define unspent transaction outputs which get updated and used in validation
-	var unspentTransactionOutputs []*transactions.UnspentTransactionOutput
+	// Validates the whole block chain, including the first genesis block and all the rest.
+	IsValidChain(blockchain []*Block, currentTimestamp time.Time) (bool, []*transactions.UnspentTransactionOutput, error)
+}
 
-	// loop through chain and validate all blocks with each other
-	for index := 1; index < len(blockchain); index++ {
+//ChainValidator : Defines chain validator struct that has the dependencies for chain validation.
+type ChainValidator struct {
+	TransactionValidator      transactions.IBlockTransactionValidator
+	UnspentTransactionManager transactions.IUnspentTransactionManager
+}
 
-		currentBlock := blockchain[index]
-		previousBlock := blockchain[index-1]
+//UpdateUnspentTransactionOutputs : Processes new transactions and generates new unspent transactions.
+func (chainValidator *ChainValidator) UpdateUnspentTransactionOutputs(newTransactions []*transactions.Transaction, unspentTransactionOutputs []*transactions.UnspentTransactionOutput) []*transactions.UnspentTransactionOutput {
+	return chainValidator.UnspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+}
 
-		isBlockValid, err := IsValidNewBlock(currentBlock, previousBlock, currentTimestamp, unspentTransactionOutputs)
-
-		if !isBlockValid || err != nil {
-			return false, []*transactions.UnspentTransactionOutput{}, err
-		}
-
-		// update current node unspent outputs
-		unspentTransactionOutputs = transactions.UpdateUnspentTransactionOutputs(currentBlock.Transactions, unspentTransactionOutputs)
-	}
-
-	return true, unspentTransactionOutputs, nil
+//ValidateBlockTransactions : Validates transactions that belong to a single block.
+func (chainValidator *ChainValidator) ValidateBlockTransactions(transactions []*transactions.Transaction, unspentTransactionOutputs []*transactions.UnspentTransactionOutput, blockIndex int) (bool, error) {
+	return chainValidator.TransactionValidator.ValidateBlockTransactions(transactions, unspentTransactionOutputs, blockIndex)
 }

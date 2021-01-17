@@ -8,7 +8,7 @@ import (
 
 // Test_Sign_ : Tests if new transaction outputs are updated/added from input transactions.
 func Test_UpdateUnspentTransactionOutputs_NewTransactionOutputs(t *testing.T) {
-
+	var unspentTransactionManager = &UnspentTransactionManager{}
 	// create inputs
 	var newTransactions = []*Transaction{
 		{
@@ -59,7 +59,7 @@ func Test_UpdateUnspentTransactionOutputs_NewTransactionOutputs(t *testing.T) {
 	}
 
 	// update unspent transactions
-	result := UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+	result := unspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
 
 	// validate
 	if len(result) != len(expectedResult) {
@@ -79,7 +79,7 @@ func Test_UpdateUnspentTransactionOutputs_NewTransactionOutputs(t *testing.T) {
 
 // Test_UpdateUnspentTransactionOutputs_FilteredTransactionOutputs : Tests if existing unspent transaction outputs are filtered with new transaction inputs.
 func Test_UpdateUnspentTransactionOutputs_FilteredTransactionOutputs(t *testing.T) {
-
+	var unspentTransactionManager = &UnspentTransactionManager{}
 	// create inputs
 	var newTransactions = []*Transaction{
 		{
@@ -147,7 +147,7 @@ func Test_UpdateUnspentTransactionOutputs_FilteredTransactionOutputs(t *testing.
 	}
 
 	// update unspent transactions
-	result := UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+	result := unspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
 
 	// validate
 	if len(result) != len(expectedResult) {
@@ -167,7 +167,7 @@ func Test_UpdateUnspentTransactionOutputs_FilteredTransactionOutputs(t *testing.
 
 // Test_UpdateUnspentTransactionOutputs_CombinedTransactionOutputs : Tests if result contains both new and existing unspent transaction outputs.
 func Test_UpdateUnspentTransactionOutputs_CombinedTransactionOutputs(t *testing.T) {
-
+	var unspentTransactionManager = &UnspentTransactionManager{}
 	// create inputs
 	var newTransactions = []*Transaction{
 		{
@@ -271,7 +271,7 @@ func Test_UpdateUnspentTransactionOutputs_CombinedTransactionOutputs(t *testing.
 	}
 
 	// update unspent transactions
-	result := UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+	result := unspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
 
 	// validate
 	if len(result) != len(expectedResult) {
@@ -291,7 +291,7 @@ func Test_UpdateUnspentTransactionOutputs_CombinedTransactionOutputs(t *testing.
 
 // Test_UpdateUnspentTransactionOutputsMultipleInputForTransactionOutputs : Tests if existing unspent transaction outputs are filtered when there are multiple inputs that match to single unspent output.
 func Test_UpdateUnspentTransactionOutputsMultipleInputForTransactionOutputs(t *testing.T) {
-
+	var unspentTransactionManager = &UnspentTransactionManager{}
 	// create inputs
 	var newTransactions = []*Transaction{
 		{
@@ -335,7 +335,7 @@ func Test_UpdateUnspentTransactionOutputsMultipleInputForTransactionOutputs(t *t
 	}
 
 	// update unspent transactions
-	result := UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+	result := unspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
 
 	// validate
 	if len(result) != len(expectedResult) {
@@ -355,7 +355,7 @@ func Test_UpdateUnspentTransactionOutputsMultipleInputForTransactionOutputs(t *t
 
 // Test_UpdateUnspentTransactionOutputs_FilteredAllTransactionOutputs : Tests if all existing unspent transaction outputs are filtered correctly.
 func Test_UpdateUnspentTransactionOutputs_FilteredAllTransactionOutputs(t *testing.T) {
-
+	var unspentTransactionManager = &UnspentTransactionManager{}
 	// create inputs
 	var newTransactions = []*Transaction{
 		{
@@ -386,7 +386,7 @@ func Test_UpdateUnspentTransactionOutputs_FilteredAllTransactionOutputs(t *testi
 	expectedResult := []*UnspentTransactionOutput{}
 
 	// update unspent transactions
-	result := UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
+	result := unspentTransactionManager.UpdateUnspentTransactionOutputs(newTransactions, unspentTransactionOutputs)
 
 	// validate
 	if len(result) != len(expectedResult) {
