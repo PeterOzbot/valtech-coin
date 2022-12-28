@@ -39,6 +39,7 @@ func initHTTP(router *gin.Engine) {
 	router.GET("/blockchain", node.GetBlockchain)
 	router.GET("/unspentTransactionOutputs", node.GetUnspentTransactionOutputs)
 	router.POST("/mineblock", node.MineBlock)
+	router.POST("/AddTransactionPool", node.AddTransactionPool)
 	router.GET("/peers", p2p.GetPeers)
 	router.POST("/addPeer", p2p.AddPeer)
 }

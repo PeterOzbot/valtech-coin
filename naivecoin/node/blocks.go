@@ -3,6 +3,7 @@ package node
 import (
 	"fmt"
 	"naivecoin/blockchain"
+	"naivecoin/mempool"
 	"naivecoin/p2p"
 	"naivecoin/transactions"
 	"naivecoin/wallet"
@@ -54,6 +55,22 @@ func MineBlock(c *gin.Context) {
 
 	// respond with new block
 	c.JSON(http.StatusOK, newBlock)
+}
+
+//AddTransactionPool : Creates new transaction and adds it to the transaction pool.
+func AddTransactionPool(c *gin.Context) {
+
+	// read data about new transaction
+
+	// generate new transaction
+	transaction, _ := wallet.GenerateTransaction("", Wallet, 0, UnspentTransactionOutputs)
+
+	// check if transaction can be added to the transaction pool
+	if mempool.CanAddTransaction(transaction) {
+
+	}
+
+	c.JSON(http.StatusOK, transaction)
 }
 
 //SelectChain :  Used to select new chain when received from other node.
